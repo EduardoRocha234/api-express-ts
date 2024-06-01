@@ -1,0 +1,25 @@
+{
+  "name": "api-express-ts",
+  "module": "index.ts",
+  "scripts": {
+    "start": "bun run src/main.ts",
+    "dev": "bun run src/main.ts --watch",
+    "prisma:studio": "bunx prisma studio",
+    "prisma:generate": "bunx prisma generate",
+    "prisma:migrate": "bunx prisma migrate dev --name init"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.14.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bun": "latest",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6"
+  },
+  "type": "module"
+}
