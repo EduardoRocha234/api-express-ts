@@ -14,10 +14,46 @@ datasource db {
 }
 
 model User {
-  id String @id
-  name String
-  email String @unique
-  password String
+  id              String @id
+  name            String
+  email           String @unique
+  password        String
+
+  participants    Participant[]
 
   @@map("users")
+}
+
+model Sport {
+  id              Int @id @default(autoincrement())
+  name            String
+  events          Event[]
+
+  @@map("sports")
+}
+
+model Event {
+  id              Int @id @default(autoincrement())
+  name            String
+  sport           Sport @relation(fields: [sportId], references: [id])
+  sportId         Int
+  maxParticipants Int
+  dateTime        DateTime
+  location        String
+
+  participants    Participant[]
+
+  @@map("events")
+}
+
+model Participant {
+  id              Int     @id @default(autoincrement())
+  event           Event   @relation(fields: [eventId], references: [id])
+  eventId         Int
+  user            User    @relation(fields: [userId], references: [id])
+  userId          String
+  status          String
+
+
+  @@map("participants")
 }
