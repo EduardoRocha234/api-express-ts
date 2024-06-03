@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from 'express'
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'delete'
 
-export type Middleware = (req: Request, res: Response, next: NextFunction) => Promise<void>
+export type Middlewares = Array<(req: Request, res: Response, next: NextFunction) => Promise<void>>
 
 export const HttpMethod = {
     GET: 'get' as HttpMethod,
@@ -15,5 +15,5 @@ export interface Route {
     getHandler(): (request: Request, response: Response) => Promise<void>
     getPath(): string
     getMethod(): HttpMethod
-    getMiddlewares(): Middleware[]
+    getMiddlewares(): Middlewares
 }

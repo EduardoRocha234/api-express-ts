@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { HttpMethod, type Middleware, type Route } from '../routes'
+import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { FindUserOutputDto, FindUserByIdUsecase } from '@usecases/user/find-by-id.usecase'
 
 export type FindUserResponseDto = {
@@ -13,10 +13,10 @@ export class FindUserByIdRoute implements Route {
         private readonly path: string,
         private readonly method: HttpMethod,
         private readonly findUserService: FindUserByIdUsecase,
-        private readonly middlewares: Middleware[]
+        private readonly middlewares: Middlewares
     ) {}
 
-    public static create(findUserService: FindUserByIdUsecase, middlewares: Middleware[]) {
+    public static create(findUserService: FindUserByIdUsecase, middlewares: Middlewares) {
         return new FindUserByIdRoute('/user/:id', HttpMethod.GET, findUserService, middlewares)
     }
 
@@ -42,7 +42,7 @@ export class FindUserByIdRoute implements Route {
         return this.method
     }
 
-    public getMiddlewares(): Middleware[] {
+    public getMiddlewares(): Middlewares {
         return this.middlewares
     }
 

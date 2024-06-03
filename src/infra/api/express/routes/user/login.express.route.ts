@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { HttpMethod, type Middleware, type Route } from '../routes'
+import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type {
     FindUserOutputDto,
     FindUserByEmailUsecase
@@ -73,7 +73,7 @@ export class LoginRoute implements Route {
         return this.method
     }
 
-    public getMiddlewares(): Middleware[] {
+    public getMiddlewares(): Middlewares {
         return []
     }
 

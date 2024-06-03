@@ -27,7 +27,7 @@ export default function useUserProvider(prismaClient: PrismaClient) {
     const findUserByEmailUseCase = FindUserByEmailUsecase.create(aRepository)
     const deleteUserUseCase = DeleteUserUsecase.create(aRepository)
 
-    const createUserRoute = CreateUserRoute.create(createUserUseCase)
+    const createUserRoute = CreateUserRoute.create(createUserUseCase, findUserByEmailUseCase)
     const listUserRoute = ListUserRoute.create(listUserUseCase, [authMiddleware])
     const findUserByIdRoute = FindUserByIdRoute.create(findUserByIdUseCase, [authMiddleware])
     const deleteUserRoute = DeleteUserRoute.create(deleteUserUseCase, findUserByIdUseCase, [

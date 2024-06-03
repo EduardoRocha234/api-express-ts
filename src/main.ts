@@ -1,6 +1,5 @@
 import { ApiExpress } from '@infra/api/express/api.express'
 import { prisma } from '@package/prisma/prisma'
-import useUserProvider from './providers/user.provider'
 import initProviders from './providers'
 
 const main = () => {

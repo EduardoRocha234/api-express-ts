@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { HttpMethod, type Middleware, type Route } from '../routes'
+import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { ListUserOutputDto, ListUserUsecase } from '@usecases/user/list-user.usecase'
 
 export type ListUserResponseDto = {
@@ -15,10 +15,10 @@ export class ListUserRoute implements Route {
         private readonly path: string,
         private readonly method: HttpMethod,
         private readonly listUserService: ListUserUsecase,
-        private readonly middlewares: Middleware[]
+        private readonly middlewares: Middlewares
     ) {}
 
-    public static create(listUserService: ListUserUsecase, middlewares: Middleware[]) {
+    public static create(listUserService: ListUserUsecase, middlewares: Middlewares) {
         return new ListUserRoute('/user', HttpMethod.GET, listUserService, middlewares)
     }
 
@@ -40,7 +40,7 @@ export class ListUserRoute implements Route {
         return this.method
     }
 
-    public getMiddlewares(): Middleware[] {
+    public getMiddlewares(): Middlewares {
         return this.middlewares
     }
 

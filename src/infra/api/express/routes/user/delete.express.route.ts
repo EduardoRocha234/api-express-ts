@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { HttpMethod, type Middleware, type Route } from '../routes'
+import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { DeleteUserUsecase } from '@usecases/user/delete.usecase'
 import type { FindUserByIdUsecase } from '@usecases/user/find-by-id.usecase'
 import { AuthMiddleware } from '../../middlewares/auth.middleware'
@@ -14,13 +14,13 @@ export class DeleteUserRoute implements Route {
         private readonly method: HttpMethod,
         private readonly deleteUserService: DeleteUserUsecase,
         private readonly findUserService: FindUserByIdUsecase,
-        private readonly middlewares: Middleware[]
+        private readonly middlewares: Middlewares
     ) {}
 
     public static create(
         deleteUserService: DeleteUserUsecase,
         findUserService: FindUserByIdUsecase,
-        middlewares: Middleware[]
+        middlewares: Middlewares
     ) {
         return new DeleteUserRoute(
             '/user/:id',

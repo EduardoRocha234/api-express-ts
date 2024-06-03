@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express'
 import type { CreateUserInputDto, CreateUserUsecase } from '@usecases/user/create-user.usecase'
-import { HttpMethod, type Middleware, type Route } from '../routes'
+import { HttpMethod, type Middlewares, type Route } from '../routes'
+import type { FindUserByEmailUsecase } from '@usecases/user/find-by-email.usecase'
 
 export type CreateUserResponseDto = {
     id: string
@@ -13,15 +14,31 @@ export class CreateUserRoute implements Route {
         private readonly path: string,
         private readonly method: HttpMethod,
         private readonly CreateUserService: CreateUserUsecase,
+        private readonly findUserService: FindUserByEmailUsecase
     ) {}
 
-    public static create(createUserService: CreateUserUsecase) {
-        return new CreateUserRoute('/user', HttpMethod.POST, createUserService)
+    public static create(
+        createUserService: CreateUserUsecase,
+        findUserService: FindUserByEmailUsecase
+    ) {
+        return new CreateUserRoute('/user', HttpMethod.POST, createUserService, findUserService)
     }
 
     public getHandler() {
         return async (request: Request, response: Response) => {
             const { name, email, password } = request.body
+
+            const verifyUserExist = await this.findUserService.execute(email)
+
+            if(verifyUserExist) {
+                response
+                   .status(409)
+                   .json({
+                        message: 'Usuário já existe'
+                    })
+                   .send()
+                return
+            }
 
             const input: CreateUserInputDto = {
                 email,
@@ -45,7 +62,7 @@ export class CreateUserRoute implements Route {
         return this.method
     }
 
-    public getMiddlewares(): Middleware[] {
+    public getMiddlewares(): Middlewares {
         return []
     }
 
