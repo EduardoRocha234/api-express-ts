@@ -1,43 +1,44 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import type { DeleteUserUsecase } from '@usecases/user/delete.usecase'
-import type { FindUserByIdUsecase } from '@usecases/user/find-by-id.usecase'
-import type { DeleteParticipant } from '@usecases/participant/delete.usecase'
+import type { DeleteParticipantUseCase } from '@usecases/participant/delete.usecase'
 import type { FindParticipantByIdUseCase } from '@usecases/participant/find-by-id.usecase'
 import type { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
 import { ParticipantStatusEnum } from '@domain/participants/entity/participants.entity'
-import type { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/count-by-eventId-and-status.usecase'
 import type { FindParticipantsByEventIdAndStatusUsecase } from '@usecases/participant/find-by-event-and-status.usecase'
+import type { ChangeStatusOfParticipantUseCase } from '@usecases/participant/change-status.usecase'
 
 export type DeleteUserResponseDto = {
     message: string
 }
 
-export class DeleteParticipantOfEventRoute implements Route {
+export class RemoveParticipantRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
         private readonly eventService: FindEventByIdUsecase,
         private readonly getParticipantsService: FindParticipantsByEventIdAndStatusUsecase,
-        private readonly deleteParticipantService: DeleteParticipant,
+        private readonly deleteParticipantService: DeleteParticipantUseCase,
         private readonly findParticipantService: FindParticipantByIdUseCase,
+        private readonly changeStatusOfParticipantService: ChangeStatusOfParticipantUseCase,
         private readonly middlewares: Middlewares
     ) {}
 
     public static create(
         eventService: FindEventByIdUsecase,
         getParticipantsService: FindParticipantsByEventIdAndStatusUsecase,
-        deleteParticipantService: DeleteParticipant,
+        deleteParticipantService: DeleteParticipantUseCase,
         findParticipantService: FindParticipantByIdUseCase,
+        changeStatusOfParticipantService: ChangeStatusOfParticipantUseCase,
         middlewares: Middlewares
     ) {
-        return new DeleteParticipantOfEventRoute(
+        return new RemoveParticipantRoute(
             '/event/:eventId/remove/:userId',
             HttpMethod.DELETE,
             eventService,
             getParticipantsService,
             deleteParticipantService,
             findParticipantService,
+            changeStatusOfParticipantService,
             middlewares
         )
     }

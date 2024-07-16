@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { User } from '@domain/user/entity/user'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
 import { Event } from '@domain/event/entity/event.entity'
 import {

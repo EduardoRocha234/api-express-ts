@@ -4,9 +4,11 @@
   "scripts": {
     "start": "bun run src/main.ts",
     "dev": "bun run src/main.ts --watch",
+    "lint": "eslint ./src --fix",
     "prisma:studio": "bunx prisma studio",
     "prisma:generate": "bunx prisma generate",
-    "prisma:migrate": "bunx prisma migrate dev --name init"
+    "prisma:migrate": "bunx prisma migrate dev --name init",
+    "prepare": "husky"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
@@ -16,10 +18,15 @@
     "prisma": "^5.14.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.7.0",
     "@types/bcrypt": "^5.0.2",
     "@types/bun": "latest",
     "@types/express": "^4.17.21",
-    "@types/jsonwebtoken": "^9.0.6"
+    "@types/jsonwebtoken": "^9.0.6",
+    "eslint": "9.x",
+    "globals": "^15.8.0",
+    "husky": "^9.0.11",
+    "typescript-eslint": "^7.16.1"
   },
   "type": "module"
 }

@@ -33,8 +33,8 @@ export class ApiExpress implements Api {
 
     private listRoutes() {
         const routes = this.app._router.stack
-            .filter((route: any) => route.route)
-            .map((route: any) => {
+            .filter((route: any) => route.route)  // eslint-disable-line
+            .map((route: any) => {  // eslint-disable-line
                 return {
                     path: route.route.path,
                     method: route.route.stack[0].method

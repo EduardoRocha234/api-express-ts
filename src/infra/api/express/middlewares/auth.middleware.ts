@@ -33,7 +33,7 @@ export class AuthMiddleware {
                     return
                 }
 
-                ;(request as any).user = { email: user.email }
+                ;(request as any).user = { email: user.email }  // eslint-disable-line
 
                 next()
             } catch (error) {

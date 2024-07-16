@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client'
 import type { ParticipantGateway } from '@domain/participants/gateway/participants.gateway'
 import {
     Participant,
-    ParticipantStatusEnum,
     type ParticipantStatus
 } from '@domain/participants/entity/participants.entity'
 
@@ -67,6 +66,17 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
         })
 
         return participantsCount
+    }
+
+    public async changeStatusOfParticipant(id: number, status: ParticipantStatus): Promise<void> {
+        await this.prismaClient.participant.update({
+            where: {
+                id
+            },
+            data: {
+                status
+            }
+        })
     }
 
     public async findById(id: number): Promise<Participant | undefined> {

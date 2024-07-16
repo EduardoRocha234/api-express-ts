@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import type { ListUserOutputDto, ListUserUsecase } from '@usecases/user/list-user.usecase'
 import type { ParticipantStatus } from '@domain/participants/entity/participants.entity'
 import type { ListEventsOutputDto, ListEventUseCase } from '@usecases/event/list.usecase'
 

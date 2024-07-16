@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express'
-import type { CreateUserInputDto, CreateUserUsecase } from '@usecases/user/create-user.usecase'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { CreateEventInputDto, CreateEventUsecase } from '@usecases/event/create.usecase'
 

@@ -1,5 +1,3 @@
-import type { User } from '@domain/user/entity/user'
-import type { UserGateway } from '@domain/user/gateway/user.gateway'
 import type { Usecase } from '../usecase'
 import type { ParticipantStatus } from '@domain/participants/entity/participants.entity'
 import type { ParticipantGateway } from '@domain/participants/gateway/participants.gateway'

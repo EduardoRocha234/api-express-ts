@@ -2,7 +2,6 @@ import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { DeleteUserUsecase } from '@usecases/user/delete.usecase'
 import type { FindUserByIdUsecase } from '@usecases/user/find-by-id.usecase'
-import { AuthMiddleware } from '../../middlewares/auth.middleware'
 
 export type DeleteUserResponseDto = {
     message: string

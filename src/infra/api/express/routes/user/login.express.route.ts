@@ -1,9 +1,6 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import type {
-    FindUserOutputDto,
-    FindUserByEmailUsecase
-} from '@usecases/user/find-by-email.usecase'
+import type { FindUserByEmailUsecase } from '@usecases/user/find-by-email.usecase'
 import type { BcryptAdapter } from '@infra/driven-adapter/bcrypt-adapter'
 import type { JwtAdapter } from '@infra/driven-adapter/jwt-adapter'
 
@@ -25,13 +22,7 @@ export class LoginRoute implements Route {
         jwtAdapter: JwtAdapter,
         bcryptAdapter: BcryptAdapter
     ) {
-        return new LoginRoute(
-            '/login',
-            HttpMethod.POST,
-            findUserService,
-            jwtAdapter,
-            bcryptAdapter
-        )
+        return new LoginRoute('/login', HttpMethod.POST, findUserService, jwtAdapter, bcryptAdapter)
     }
 
     public getHandler() {
@@ -53,7 +44,9 @@ export class LoginRoute implements Route {
             const compareResult = await this.bcryptAdapter.compare(password, findUser.password)
 
             if (compareResult) {
-                const token = await this.jwtAdapter.encrypt(JSON.stringify({ email, name: findUser.name }))
+                const token = await this.jwtAdapter.encrypt(
+                    JSON.stringify({ email, name: findUser.name })
+                )
 
                 const responseBody = this.present(token)
 

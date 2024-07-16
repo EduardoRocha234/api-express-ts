@@ -1,7 +1,7 @@
 import type { Usecase } from '../usecase'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
 import type { Event } from '@domain/event/entity/event.entity'
-import type { Participant, ParticipantStatus } from '@domain/participants/entity/participants.entity'
+import type { ParticipantStatus } from '@domain/participants/entity/participants.entity'
 
 export type FindEventInputDto = number
 
@@ -14,10 +14,10 @@ export type FindEventOutputDto =
           createdAt: Date
           location: string
           participants: {
-            id: number
-            userId: string
-            status: ParticipantStatus
-        }[]
+              id: number
+              userId: string
+              status: ParticipantStatus
+          }[]
       }
     | undefined
 
