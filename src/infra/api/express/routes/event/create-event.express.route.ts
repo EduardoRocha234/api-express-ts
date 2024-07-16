@@ -8,7 +8,7 @@ export type CreateEventResponseDto = {
     name: string
     sportId: number
     maxParticipants: number
-    dateTime: Date
+    createdAt: Date
     location: string
 }
 
@@ -26,10 +26,9 @@ export class CreateEventRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const { name, sportId, maxParticipants, dateTime, location } = request.body
+            const { name, sportId, maxParticipants, location } = request.body
 
             const input: CreateEventInputDto = {
-                dateTime,
                 location,
                 maxParticipants,
                 name,
@@ -58,12 +57,12 @@ export class CreateEventRoute implements Route {
 
     private present(input: CreateEventResponseDto): CreateEventResponseDto {
         const response: CreateEventResponseDto = {
-           id: input.id,
-           dateTime: input.dateTime,
-           location: input.location,
-           maxParticipants: input.maxParticipants,
-           name: input.name,
-           sportId: input.sportId
+            id: input.id,
+            createdAt: input.createdAt,
+            location: input.location,
+            maxParticipants: input.maxParticipants,
+            name: input.name,
+            sportId: input.sportId
         }
 
         return response

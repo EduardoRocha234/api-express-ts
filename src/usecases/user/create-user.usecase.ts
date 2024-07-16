@@ -44,7 +44,7 @@ export class CreateUserUsecase implements Usecase<CreateUserInputDto, CreateUser
         const output: CreateUserOutputDto = {
             id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
         }
 
         return output

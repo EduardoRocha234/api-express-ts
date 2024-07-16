@@ -35,5 +35,5 @@ export default function useUserProvider(prismaClient: PrismaClient) {
     ])
     const loginUserRoute = LoginRoute.create(findUserByEmailUseCase, jwtAdapter, bcryptAdapter)
 
-    return [createUserRoute, listUserRoute, findUserByIdRoute, loginUserRoute, deleteUserRoute]
+    return [loginUserRoute, createUserRoute, listUserRoute, findUserByIdRoute, deleteUserRoute]
 }

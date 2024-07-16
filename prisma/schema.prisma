@@ -38,7 +38,7 @@ model Event {
   sport           Sport @relation(fields: [sportId], references: [id])
   sportId         Int
   maxParticipants Int
-  dateTime        DateTime
+  createdAt        DateTime
   location        String
 
   participants    Participant[]
@@ -51,7 +51,8 @@ model Participant {
   event           Event   @relation(fields: [eventId], references: [id])
   eventId         Int
   user            User    @relation(fields: [userId], references: [id])
-  userId          String
+  userId          String @unique
+  createdAt       DateTime
   status          String
 
 

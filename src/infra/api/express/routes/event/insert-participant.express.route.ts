@@ -1,23 +1,12 @@
 import type { Request, Response } from 'express'
-import type { CreateUserInputDto, CreateUserUsecase } from '@usecases/user/create-user.usecase'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import type { CreateEventInputDto, CreateEventUsecase } from '@usecases/event/create.usecase'
 import type {
     InserParticipantUsecase,
     InsertParticipantInputDto
 } from '@usecases/participant/create.usecase'
 import type { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
-import type { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/find-by-eventId-and-status.usecase'
+import type { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/count-by-eventId-and-status.usecase'
 import { ParticipantStatusEnum } from '@domain/participants/entity/participants.entity'
-
-// export type InsertParticpantResponse = {
-//     id: number
-//     name: string
-//     sportId: number
-//     maxParticipants: number
-//     dateTime: Date
-//     location: string
-// }
 
 export class InsertParticipantInEventRoute implements Route {
     private constructor(
@@ -36,7 +25,7 @@ export class InsertParticipantInEventRoute implements Route {
         middlewares: Middlewares
     ) {
         return new InsertParticipantInEventRoute(
-            '/event/:eventId/join',
+            '/event/:eventId/join/:userId',
             HttpMethod.POST,
             eventService,
             getCountOfParticipants,
@@ -47,7 +36,7 @@ export class InsertParticipantInEventRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const { userId } = request.body
+            const userId = String(request.params['userId'])
             const eventId = Number(request.params['eventId'])
             const findEvent = await this.eventService.execute(eventId)
 

@@ -2,7 +2,10 @@ import { PrismaClient } from '@prisma/client'
 import { User } from '@domain/user/entity/user'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
 import { Event } from '@domain/event/entity/event.entity'
-import { Participant, type ParticipantStatus } from '@domain/participants/entity/participants.entity'
+import {
+    Participant,
+    type ParticipantStatus
+} from '@domain/participants/entity/participants.entity'
 
 export class EventRepositoryPrisma implements EventGateway {
     private constructor(private readonly prismaClient: PrismaClient) {}
@@ -12,10 +15,10 @@ export class EventRepositoryPrisma implements EventGateway {
     }
 
     public async save(event: Event): Promise<Event> {
-        const { dateTime, location, maxParticipants, name, sportId } = event
+        const { createdAt, location, maxParticipants, name, sportId } = event
 
         const data = {
-            dateTime,
+            createdAt,
             location,
             maxParticipants,
             name,
@@ -28,7 +31,7 @@ export class EventRepositoryPrisma implements EventGateway {
 
         const aEvent = Event.with({
             id: eventCreated.id,
-            dateTime: eventCreated.dateTime,
+            createdAt: eventCreated.createdAt,
             location: eventCreated.location,
             maxParticipants: eventCreated.maxParticipants,
             name: eventCreated.name,
@@ -49,7 +52,7 @@ export class EventRepositoryPrisma implements EventGateway {
         const eventsList = events.map((event) => {
             const eventWith = Event.with({
                 id: event.id,
-                dateTime: event.dateTime,
+                createdAt: event.createdAt,
                 location: event.location,
                 maxParticipants: event.maxParticipants,
                 name: event.name,
@@ -59,7 +62,8 @@ export class EventRepositoryPrisma implements EventGateway {
                         eventId: participant.eventId,
                         id: participant.id,
                         status: participant.status as ParticipantStatus,
-                        userId: participant.userId
+                        userId: participant.userId,
+                        createdAt: participant.createdAt
                     })
                 })
             })
@@ -84,7 +88,7 @@ export class EventRepositoryPrisma implements EventGateway {
 
         const aEvent = Event.with({
             id: event.id,
-            dateTime: event.dateTime,
+            createdAt: event.createdAt,
             location: event.location,
             maxParticipants: event.maxParticipants,
             name: event.name,
@@ -94,7 +98,8 @@ export class EventRepositoryPrisma implements EventGateway {
                     eventId: participant.eventId,
                     id: participant.id,
                     status: participant.status as ParticipantStatus,
-                    userId: participant.userId
+                    userId: participant.userId,
+                    createdAt: participant.createdAt
                 })
             })
         })
@@ -103,10 +108,10 @@ export class EventRepositoryPrisma implements EventGateway {
     }
 
     public async update(event: Event): Promise<Event> {
-        const { id, dateTime, location, maxParticipants, name, sportId } = event
+        const { id, createdAt, location, maxParticipants, name, sportId } = event
 
         const data = {
-            dateTime,
+            createdAt,
             location,
             maxParticipants,
             name,
@@ -122,7 +127,7 @@ export class EventRepositoryPrisma implements EventGateway {
 
         const aEvent = Event.with({
             id: getEvent!.id,
-            dateTime: getEvent!.dateTime,
+            createdAt: getEvent!.createdAt,
             location: getEvent!.location,
             maxParticipants: getEvent!.maxParticipants,
             name: getEvent!.name,

@@ -9,6 +9,7 @@ export type ParticipantProps = {
     id: number
     eventId: number
     userId: string
+    createdAt: Date
     status: ParticipantStatus
 }
 
@@ -21,6 +22,7 @@ export class Participant {
         return new Participant({
             id,
             eventId,
+            createdAt: new Date(),
             status,
             userId
         })
@@ -50,5 +52,9 @@ export class Participant {
 
     public get status() {
         return this.props.status
+    }
+
+    public get createdAt() {
+        return this.props.createdAt
     }
 }

@@ -5,7 +5,7 @@ export type EventProps = {
     name: string
     sportId: number
     maxParticipants: number
-    dateTime: Date
+    createdAt: Date
     location: string
     participants: Participant[]
 }
@@ -20,7 +20,6 @@ export class Event {
         name: string,
         sportId: number,
         maxParticipants: number,
-        dateTime: Date,
         location: string,
         participants?: Participant[]
     ): Event {
@@ -29,7 +28,7 @@ export class Event {
             name,
             sportId,
             maxParticipants,
-            dateTime,
+            createdAt: new Date(),
             location,
             participants: participants || []
         })
@@ -61,8 +60,8 @@ export class Event {
         return this.props.maxParticipants
     }
 
-    public get dateTime(): Date {
-        return this.props.dateTime
+    public get createdAt(): Date {
+        return this.props.createdAt
     }
 
     public get location(): string {

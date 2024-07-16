@@ -14,12 +14,13 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
     }
 
     public async save(participant: Participant): Promise<void> {
-        const { eventId, status, userId } = participant
+        const { eventId, status, userId, createdAt } = participant
 
         const data = {
             eventId,
             status,
-            userId
+            userId,
+            createdAt
         }
 
         await this.prismaClient.participant.create({
@@ -35,6 +36,9 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
             where: {
                 eventId,
                 status
+            },
+            orderBy: {
+                createdAt: 'asc'
             }
         })
 
@@ -43,7 +47,8 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
                 eventId: participant.eventId,
                 id: participant.id,
                 status: participant.status as ParticipantStatus,
-                userId: participant.userId
+                userId: participant.userId,
+                createdAt: participant.createdAt
             })
         )
 
@@ -62,5 +67,53 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
         })
 
         return participantsCount
+    }
+
+    public async findById(id: number): Promise<Participant | undefined> {
+        const participant = await this.prismaClient.participant.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!participant) return
+
+        const aParticipant = Participant.with({
+            id: participant.id,
+            eventId: participant.eventId,
+            status: participant.status as ParticipantStatus,
+            userId: participant.userId,
+            createdAt: participant.createdAt
+        })
+
+        return aParticipant
+    }
+
+    public async findByUserId(userId: string): Promise<Participant | undefined> {
+        const participant = await this.prismaClient.participant.findUnique({
+            where: {
+                userId
+            }
+        })
+
+        if (!participant) return
+
+        const aParticipant = Participant.with({
+            id: participant.id,
+            eventId: participant.eventId,
+            status: participant.status as ParticipantStatus,
+            userId: participant.userId,
+            createdAt: participant.createdAt
+        })
+
+        return aParticipant
+    }
+
+    public async delete(id: number): Promise<void> {
+        await this.prismaClient.participant.delete({
+            where: {
+                id
+            }
+        })
     }
 }

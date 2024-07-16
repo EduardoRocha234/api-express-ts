@@ -8,8 +8,10 @@ import { InserParticipantUsecase } from '@usecases/participant/create.usecase'
 import { ParticipantRepositoryPrisma } from '@infra/repositories/participant/participant.repository.prisma'
 import { InsertParticipantInEventRoute } from '@infra/api/express/routes/event/insert-participant.express.route'
 import { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
-import { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/find-by-eventId-and-status.usecase'
+import { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/count-by-eventId-and-status.usecase'
 import { FindEventByIdRoute } from '@infra/api/express/routes/event/find-by-id.express.route'
+import { ListEventUseCase } from '@usecases/event/list.usecase'
+import { ListEventRoute } from '@infra/api/express/routes/event/list-event.express.route'
 
 export default function useEventProvider(prismaClient: PrismaClient) {
     const jwtAdapter = new JwtAdapter()
@@ -20,11 +22,12 @@ export default function useEventProvider(prismaClient: PrismaClient) {
 
     const createEventUseCase = CreateEventUsecase.create(aRepository)
     const findEventByIdUseCase = FindEventByIdUsecase.create(aRepository)
+    const getAllEventsUseCase = ListEventUseCase.create(aRepository)
     const insertParticipantUseCase = InserParticipantUsecase.create(participantRepository)
     const getCountOfParticipantsUseCase =
         CountOfParticipantByEventIdAndStatusUsecase.create(participantRepository)
 
-    const inserParticipantRoute = InsertParticipantInEventRoute.create(
+    const insertParticipantRoute = InsertParticipantInEventRoute.create(
         findEventByIdUseCase,
         getCountOfParticipantsUseCase,
         insertParticipantUseCase,
@@ -32,6 +35,7 @@ export default function useEventProvider(prismaClient: PrismaClient) {
     )
     const createEventRoute = CreateEventRoute.create(createEventUseCase, [authMiddleware])
     const findEventByIdRoute = FindEventByIdRoute.create(findEventByIdUseCase, [authMiddleware])
+    const getAllEventsRoute = ListEventRoute.create(getAllEventsUseCase, [authMiddleware])
 
-    return [createEventRoute, findEventByIdRoute, inserParticipantRoute]
+    return [createEventRoute, findEventByIdRoute, getAllEventsRoute, insertParticipantRoute]
 }

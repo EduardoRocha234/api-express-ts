@@ -6,7 +6,6 @@ export type CreateEventInputDto = {
     name: string
     sportId: number
     maxParticipants: number
-    dateTime: Date
     location: string
 }
 
@@ -15,7 +14,7 @@ export type CreateEventOutputDto = {
     name: string
     sportId: number
     maxParticipants: number
-    dateTime: Date
+    createdAt: Date
     location: string
 }
 
@@ -27,13 +26,12 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
     }
 
     public async execute({
-        dateTime,
         location,
         maxParticipants,
         name,
         sportId
     }: CreateEventInputDto): Promise<CreateEventOutputDto> {
-        const aEvent = Event.create(0, name, sportId, maxParticipants, dateTime, location)
+        const aEvent = Event.create(0, name, sportId, maxParticipants, location)
 
         const eventCreated = await this.eventGateway.save(aEvent)
 
@@ -45,7 +43,7 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
     private presentOutput(e: Event): CreateEventOutputDto {
         const output: CreateEventOutputDto = {
             id: e.id,
-            dateTime: e.dateTime,
+            createdAt: e.createdAt,
             location: e.location,
             maxParticipants: e.maxParticipants,
             name: e.name,
