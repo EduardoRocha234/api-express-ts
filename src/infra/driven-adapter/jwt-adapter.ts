@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
 
-export const secret = 'pYPKYp3kduyPXM71VjkaEIa7TMUfCFTF'
+export const secret = process.env.SECRET_KEY as string
 
 export type PayloadToken = {
-	account: string
-	iat: number
-	exp: number
+    account: string
+    iat: number
+    exp: number
 }
 
 export type PayloadSign = {
