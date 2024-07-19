@@ -29,6 +29,16 @@ export class LoginRoute implements Route {
         return async (request: Request, response: Response) => {
             const { email, password } = request.body
 
+            if (!email || !password) {
+                response
+                    .status(401)
+                    .json({
+                        message: 'Crendenciais inválidas'
+                    })
+                    .send()
+                return
+            }
+
             const findUser = await this.findUserService.execute(email)
 
             if (!findUser) {
