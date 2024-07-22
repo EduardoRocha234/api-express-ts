@@ -8,6 +8,7 @@ import type { Usecase } from '@usecases/usecase'
 export type InsertParticipantInputDto = {
     eventId: number
     userId: string
+    participantName?: string
     status: ParticipantStatus
 }
 

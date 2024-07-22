@@ -12,6 +12,7 @@ export type ParticipantProps = {
     eventId: number
     userId: string
     user?: User
+    participantName?: string
     createdAt: Date
     status: ParticipantStatus
 }
@@ -25,14 +26,16 @@ export class Participant {
         id: number,
         eventId: number,
         userId: string,
-        status: ParticipantStatus
+        status: ParticipantStatus,
+        participantName?: string
     ): Participant {
         return new Participant({
             id,
             eventId,
             createdAt: new Date(),
             status,
-            userId
+            userId,
+            participantName
         })
     }
 
@@ -64,6 +67,10 @@ export class Participant {
 
     public get status() {
         return this.props.status
+    }
+
+    public get participantName() {
+        return this.props.participantName
     }
 
     public get createdAt() {

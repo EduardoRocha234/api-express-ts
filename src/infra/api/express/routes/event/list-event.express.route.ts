@@ -15,7 +15,8 @@ export type ListEventResponseDto = {
         participants: {
             id: number
             userId: string
-            status: ParticipantStatus,
+            participantName?: string
+            status: ParticipantStatus
             createdAt: Date
         }[]
     }[]
@@ -68,8 +69,9 @@ export class ListEventRoute implements Route {
                 participants: event.participants.map((participant) => ({
                     id: participant.id,
                     userId: participant.userId,
+                    participantName: participant.participantName,
                     status: participant.status,
-                    createdAt: participant.createdAt,
+                    createdAt: participant.createdAt
                 }))
             }))
         }

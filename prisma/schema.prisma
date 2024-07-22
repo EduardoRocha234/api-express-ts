@@ -52,6 +52,7 @@ model Participant {
   event           Event   @relation(fields: [eventId], references: [id])
   eventId         Int
   user            User    @relation(fields: [userId], references: [id])
+  participantName String
   userId          String @unique
   createdAt       DateTime
   status          String

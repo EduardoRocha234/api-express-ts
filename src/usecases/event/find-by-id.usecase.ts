@@ -17,6 +17,7 @@ export type FindEventOutputDto =
           participants: {
               id: number
               userId: string
+              participantName?: string
               status: ParticipantStatus
           }[]
       }

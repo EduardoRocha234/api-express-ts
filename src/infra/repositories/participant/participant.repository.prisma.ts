@@ -15,10 +15,17 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
     public async save(participant: Participant): Promise<void> {
         const { eventId, status, userId, createdAt } = participant
 
+        const user = await this.prismaClient.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
+
         const data = {
             eventId,
             status,
             userId,
+            participantName: user?.name || '',
             createdAt
         }
 
@@ -47,6 +54,7 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
                 id: participant.id,
                 status: participant.status as ParticipantStatus,
                 userId: participant.userId,
+                participantName: participant.participantName,
                 createdAt: participant.createdAt
             })
         )
@@ -93,6 +101,7 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
             eventId: participant.eventId,
             status: participant.status as ParticipantStatus,
             userId: participant.userId,
+            participantName: participant.participantName,
             createdAt: participant.createdAt
         })
 
@@ -113,6 +122,7 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
             eventId: participant.eventId,
             status: participant.status as ParticipantStatus,
             userId: participant.userId,
+            participantName: participant.participantName,
             createdAt: participant.createdAt
         })
 

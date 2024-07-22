@@ -11,6 +11,7 @@ export type FindParticipantByEventIdOutputDto =
           eventId: number
           status: ParticipantStatus
           userId: string
+          participantName?: string
           createdAt: Date
       }[]
 
@@ -47,6 +48,7 @@ export class FindParticipantsByEventIdAndStatusUsecase
             eventId: participant.eventId,
             status: participant.status,
             userId: participant.userId,
+            participantName: participant.participantName,
             createdAt: participant.createdAt
         }))
     }

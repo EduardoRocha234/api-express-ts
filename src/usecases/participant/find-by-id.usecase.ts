@@ -12,6 +12,7 @@ export type FindParticipantOutputDto =
           id: number
           eventId: number
           status: ParticipantStatus
+          participantName?: string
           userId: string
       }
     | undefined
@@ -40,6 +41,7 @@ export class FindParticipantByIdUseCase
             id: input.id,
             eventId: input.eventId,
             status: input.status,
+            participantName: input.participantName,
             userId: input.userId
         }
     }

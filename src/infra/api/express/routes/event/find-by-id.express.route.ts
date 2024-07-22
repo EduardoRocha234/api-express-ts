@@ -68,6 +68,7 @@ export class FindEventByIdRoute implements Route {
             participants: input!.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,
+                participantName: participant.participantName,
                 status: participant.status
             }))
         }

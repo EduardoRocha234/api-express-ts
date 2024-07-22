@@ -64,6 +64,7 @@ export class EventRepositoryPrisma implements EventGateway {
                         eventId: participant.eventId,
                         id: participant.id,
                         status: participant.status as ParticipantStatus,
+                        participantName: participant.participantName,
                         userId: participant.userId,
                         createdAt: participant.createdAt
                     })
@@ -102,6 +103,7 @@ export class EventRepositoryPrisma implements EventGateway {
                     id: participant.id,
                     status: participant.status as ParticipantStatus,
                     userId: participant.userId,
+                    participantName: participant.participantName,
                     createdAt: participant.createdAt
                 })
             })
