@@ -10,6 +10,7 @@ export type ListEventResponseDto = {
         sportId: number
         maxParticipants: number
         createdAt: Date
+        datetime: Date
         location: string
         participants: {
             id: number
@@ -63,6 +64,7 @@ export class ListEventRoute implements Route {
                 maxParticipants: event.maxParticipants,
                 createdAt: event.createdAt,
                 location: event.location,
+                datetime: event.datetime,
                 participants: event.participants.map((participant) => ({
                     id: participant.id,
                     userId: participant.userId,

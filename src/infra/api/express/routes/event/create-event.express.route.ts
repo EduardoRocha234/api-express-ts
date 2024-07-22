@@ -8,6 +8,7 @@ export type CreateEventResponseDto = {
     sportId: number
     maxParticipants: number
     createdAt: Date
+    datetime: Date
     location: string
 }
 
@@ -25,10 +26,21 @@ export class CreateEventRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const { name, sportId, maxParticipants, location } = request.body
+            const { name, sportId, maxParticipants, location, datetime } = request.body
+
+            if (!name || !sportId || !maxParticipants || !location || !datetime) {
+                response
+                    .status(400)
+                    .json({
+                        message: 'Dados inválidos'
+                    })
+                    .send()
+                return
+            }
 
             const input: CreateEventInputDto = {
                 location,
+                datetime,
                 maxParticipants,
                 name,
                 sportId
@@ -61,6 +73,7 @@ export class CreateEventRoute implements Route {
             location: input.location,
             maxParticipants: input.maxParticipants,
             name: input.name,
+            datetime: input.datetime,
             sportId: input.sportId
         }
 

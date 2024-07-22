@@ -1,3 +1,5 @@
+import type { User } from '@domain/user/entity/user'
+
 export type ParticipantStatus = 'confirmed' | 'waiting_list'
 
 export const ParticipantStatusEnum = {
@@ -9,6 +11,7 @@ export type ParticipantProps = {
     id: number
     eventId: number
     userId: string
+    user?: User
     createdAt: Date
     status: ParticipantStatus
 }
@@ -18,7 +21,12 @@ export class Participant {
         this.validation()
     }
 
-    public static create(id: number, eventId: number, userId: string, status: ParticipantStatus): Participant {
+    public static create(
+        id: number,
+        eventId: number,
+        userId: string,
+        status: ParticipantStatus
+    ): Participant {
         return new Participant({
             id,
             eventId,
@@ -36,6 +44,10 @@ export class Participant {
 
     public static with(props: ParticipantProps) {
         return new Participant(props)
+    }
+
+    public get user(): User | undefined {
+        return this.props.user
     }
 
     public get id(): number {

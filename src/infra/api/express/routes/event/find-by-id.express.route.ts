@@ -1,8 +1,6 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import {
-    type ParticipantStatus
-} from '@domain/participants/entity/participants.entity'
+import { type ParticipantStatus } from '@domain/participants/entity/participants.entity'
 import type { FindEventByIdUsecase, FindEventOutputDto } from '@usecases/event/find-by-id.usecase'
 
 export type FindEventByIdResponseDto = {
@@ -11,6 +9,7 @@ export type FindEventByIdResponseDto = {
     sportId: number
     maxParticipants: number
     createdAt: Date
+    datetime: Date
     location: string
     participants: {
         id: number
@@ -65,6 +64,7 @@ export class FindEventByIdRoute implements Route {
             maxParticipants: input!.maxParticipants,
             location: input!.location,
             createdAt: input!.createdAt,
+            datetime: input!.datetime,
             participants: input!.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,

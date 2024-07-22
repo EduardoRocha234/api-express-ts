@@ -14,14 +14,15 @@ export class EventRepositoryPrisma implements EventGateway {
     }
 
     public async save(event: Event): Promise<Event> {
-        const { createdAt, location, maxParticipants, name, sportId } = event
+        const { createdAt, location, maxParticipants, name, sportId, datetime } = event
 
         const data = {
             createdAt,
             location,
             maxParticipants,
             name,
-            sportId
+            sportId,
+            datetime
         }
 
         const eventCreated = await this.prismaClient.event.create({
@@ -35,6 +36,7 @@ export class EventRepositoryPrisma implements EventGateway {
             maxParticipants: eventCreated.maxParticipants,
             name: eventCreated.name,
             sportId: eventCreated.sportId,
+            datetime: eventCreated.datetime,
             participants: []
         })
 
@@ -56,6 +58,7 @@ export class EventRepositoryPrisma implements EventGateway {
                 maxParticipants: event.maxParticipants,
                 name: event.name,
                 sportId: event.sportId,
+                datetime: event.datetime,
                 participants: event.participants.map((participant) => {
                     return Participant.with({
                         eventId: participant.eventId,
@@ -92,6 +95,7 @@ export class EventRepositoryPrisma implements EventGateway {
             maxParticipants: event.maxParticipants,
             name: event.name,
             sportId: event.sportId,
+            datetime: event.datetime,
             participants: event.participants.map((participant) => {
                 return Participant.with({
                     eventId: participant.eventId,
@@ -130,6 +134,7 @@ export class EventRepositoryPrisma implements EventGateway {
             location: getEvent!.location,
             maxParticipants: getEvent!.maxParticipants,
             name: getEvent!.name,
+            datetime: event.datetime,
             sportId: getEvent!.sportId,
             participants: getEvent!.participants
         })

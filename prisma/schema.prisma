@@ -39,6 +39,7 @@ model Event {
   sportId         Int
   maxParticipants Int
   createdAt        DateTime
+  datetime         DateTime
   location        String
 
   participants    Participant[]

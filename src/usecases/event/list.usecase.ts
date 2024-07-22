@@ -10,6 +10,7 @@ export type ListEventsOutputDto = {
         sportId: number
         maxParticipants: number
         createdAt: Date
+        datetime: Date
         location: string
         participants: {
             id: number
@@ -44,6 +45,7 @@ export class ListEventUseCase implements Usecase<void, ListEventsOutputDto> {
                 maxParticipants: event.maxParticipants,
                 createdAt: event.createdAt,
                 location: event.location,
+                datetime: event.datetime,
                 participants: event.participants.map((participant) => ({
                     id: participant.id,
                     userId: participant.userId,
