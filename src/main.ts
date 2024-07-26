@@ -3,10 +3,17 @@ import { prisma } from '@package/prisma/prisma'
 import initProviders from './providers'
 
 const main = () => {
-    const routesProvider = initProviders(prisma)
-
-    const api = ApiExpress.create(routesProvider)
     const port = 8000
+    const api = ApiExpress.create()
+    const io = api.getIO()
+
+    const routesProvider = initProviders(prisma, io)
+    api.addRoutes(routesProvider)
+
+    io.on('connection', (socket) => {
+        console.log(`A user connected`)
+        socket.emit('message', 'Welcome to the Server')
+    })
 
     api.start(port)
 }

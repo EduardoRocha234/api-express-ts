@@ -55,7 +55,7 @@ export class LoginRoute implements Route {
 
             if (compareResult) {
                 const token = await this.jwtAdapter.encrypt(
-                    JSON.stringify({ email, name: findUser.name })
+                    JSON.stringify({ email, name: findUser.name, userId: findUser.id })
                 )
 
                 const responseBody = this.present(token)

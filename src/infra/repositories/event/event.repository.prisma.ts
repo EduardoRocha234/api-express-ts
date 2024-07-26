@@ -83,7 +83,11 @@ export class EventRepositoryPrisma implements EventGateway {
                 id
             },
             include: {
-                participants: true
+                participants: {
+                    orderBy: {
+                        createdAt: 'asc'
+                    }
+                }
             }
         })
 

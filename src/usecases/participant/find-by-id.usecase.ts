@@ -5,7 +5,10 @@ import type {
 } from '@domain/participants/entity/participants.entity'
 import type { ParticipantGateway } from '@domain/participants/gateway/participants.gateway'
 
-export type FindParticipantInputDto = string
+export type FindParticipantInputDto = {
+    userId: string
+    eventId: number
+}
 
 export type FindParticipantOutputDto =
     | {
@@ -26,8 +29,11 @@ export class FindParticipantByIdUseCase
         return new FindParticipantByIdUseCase(participantGateway)
     }
 
-    public async execute(id: string): Promise<FindParticipantOutputDto> {
-        const participant = await this.participantGateway.findByUserId(id)
+    public async execute({
+        eventId,
+        userId
+    }: FindParticipantInputDto): Promise<FindParticipantOutputDto> {
+        const participant = await this.participantGateway.findByUserIdAndEventId(userId, eventId)
 
         const output = this.presentOutput(participant)
 

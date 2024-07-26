@@ -7,6 +7,7 @@ import type {
 import type { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
 import type { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/count-by-eventId-and-status.usecase'
 import { ParticipantStatusEnum } from '@domain/participants/entity/participants.entity'
+import type { Server as SocketIOServer } from 'socket.io'
 
 export class InsertParticipantInEventRoute implements Route {
     private constructor(
@@ -15,6 +16,7 @@ export class InsertParticipantInEventRoute implements Route {
         private readonly eventService: FindEventByIdUsecase,
         private readonly getCountOfParticipants: CountOfParticipantByEventIdAndStatusUsecase,
         private readonly insertParticipantService: InserParticipantUsecase,
+        private readonly socketIo: SocketIOServer,
         private readonly middlewares: Middlewares
     ) {}
 
@@ -22,6 +24,7 @@ export class InsertParticipantInEventRoute implements Route {
         eventService: FindEventByIdUsecase,
         getCountOfParticipants: CountOfParticipantByEventIdAndStatusUsecase,
         insertParticipantService: InserParticipantUsecase,
+        socketIo: SocketIOServer,
         middlewares: Middlewares
     ) {
         return new InsertParticipantInEventRoute(
@@ -30,6 +33,7 @@ export class InsertParticipantInEventRoute implements Route {
             eventService,
             getCountOfParticipants,
             insertParticipantService,
+            socketIo,
             middlewares
         )
     }
@@ -63,6 +67,12 @@ export class InsertParticipantInEventRoute implements Route {
                 }
 
                 await this.insertParticipantService.execute(input)
+
+                this.socketIo.emit('insertParticipant', {
+                    eventId: input.eventId,
+                    particopant: input,
+                    status: input.status
+                })
 
                 response
                     .status(201)

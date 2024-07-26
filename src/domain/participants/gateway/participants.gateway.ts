@@ -9,7 +9,7 @@ export interface ParticipantGateway {
     ): Promise<number>
     // list(): Promise<Event[]>
     findById(id: number): Promise<Participant | undefined>
-    findByUserId(userId: string): Promise<Participant | undefined>
+    findByUserIdAndEventId(userId: string, eventId: number): Promise<Participant | undefined>
     delete(id: number): Promise<void>
     changeStatusOfParticipant(id: number, status: ParticipantStatus): Promise<void>
     // update(user: Event): Promise<Event>

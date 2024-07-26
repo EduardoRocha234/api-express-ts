@@ -18,6 +18,7 @@ export type FindEventOutputDto =
               id: number
               userId: string
               participantName?: string
+              createdAt: Date
               status: ParticipantStatus
           }[]
       }
@@ -49,7 +50,7 @@ export class FindEventByIdUsecase implements Usecase<FindEventInputDto, FindEven
             name: input.name,
             datetime: input.datetime,
             sportId: input.sportId,
-            participants: input.participants
+            participants: input.participants,
         }
     }
 }

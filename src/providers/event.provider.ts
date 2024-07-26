@@ -17,8 +17,9 @@ import { FindParticipantsByEventIdAndStatusUsecase } from '@usecases/participant
 import { DeleteParticipantUseCase } from '@usecases/participant/delete.usecase'
 import { FindParticipantByIdUseCase } from '@usecases/participant/find-by-id.usecase'
 import { ChangeStatusOfParticipantUseCase } from '@usecases/participant/change-status.usecase'
+import type { Server as SocketIOServer } from 'socket.io'
 
-export default function useEventProvider(prismaClient: PrismaClient) {
+export default function useEventProvider(prismaClient: PrismaClient, socketIo: SocketIOServer) {
     const jwtAdapter = new JwtAdapter()
     const authMiddleware = AuthMiddleware.create(jwtAdapter)
 
@@ -43,6 +44,7 @@ export default function useEventProvider(prismaClient: PrismaClient) {
         findEventByIdUseCase,
         getCountOfParticipantsUseCase,
         insertParticipantUseCase,
+        socketIo,
         [authMiddleware]
     )
     const removeParticipantRoute = RemoveParticipantRoute.create(
@@ -50,6 +52,7 @@ export default function useEventProvider(prismaClient: PrismaClient) {
         findParticipantByEventIdAndStatusUseCase,
         removeParticipantUseCase,
         findParticipantByIdUseCase,
+        socketIo,
         changeStatusOfParticipantUseCase,
         [authMiddleware]
     )

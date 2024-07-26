@@ -108,10 +108,14 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
         return aParticipant
     }
 
-    public async findByUserId(userId: string): Promise<Participant | undefined> {
-        const participant = await this.prismaClient.participant.findUnique({
+    public async findByUserIdAndEventId(
+        userId: string,
+        eventId: number
+    ): Promise<Participant | undefined> {
+        const participant = await this.prismaClient.participant.findFirst({
             where: {
-                userId
+                userId,
+                eventId
             }
         })
 

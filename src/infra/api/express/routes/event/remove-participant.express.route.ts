@@ -6,6 +6,7 @@ import type { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
 import { ParticipantStatusEnum } from '@domain/participants/entity/participants.entity'
 import type { FindParticipantsByEventIdAndStatusUsecase } from '@usecases/participant/find-by-event-and-status.usecase'
 import type { ChangeStatusOfParticipantUseCase } from '@usecases/participant/change-status.usecase'
+import type { Server as SocketIOServer } from 'socket.io'
 
 export type DeleteUserResponseDto = {
     message: string
@@ -20,6 +21,7 @@ export class RemoveParticipantRoute implements Route {
         private readonly deleteParticipantService: DeleteParticipantUseCase,
         private readonly findParticipantService: FindParticipantByIdUseCase,
         private readonly changeStatusOfParticipantService: ChangeStatusOfParticipantUseCase,
+        private readonly socketIo: SocketIOServer,
         private readonly middlewares: Middlewares
     ) {}
 
@@ -28,6 +30,7 @@ export class RemoveParticipantRoute implements Route {
         getParticipantsService: FindParticipantsByEventIdAndStatusUsecase,
         deleteParticipantService: DeleteParticipantUseCase,
         findParticipantService: FindParticipantByIdUseCase,
+        socketIo: SocketIOServer,
         changeStatusOfParticipantService: ChangeStatusOfParticipantUseCase,
         middlewares: Middlewares
     ) {
@@ -39,6 +42,7 @@ export class RemoveParticipantRoute implements Route {
             deleteParticipantService,
             findParticipantService,
             changeStatusOfParticipantService,
+            socketIo,
             middlewares
         )
     }
@@ -55,7 +59,7 @@ export class RemoveParticipantRoute implements Route {
                 return
             }
 
-            const findParticipant = await this.findParticipantService.execute(userId)
+            const findParticipant = await this.findParticipantService.execute({ eventId, userId })
 
             if (!findParticipant) {
                 response.status(404).json({ message: 'Participante não encontrado' }).send()
@@ -78,6 +82,8 @@ export class RemoveParticipantRoute implements Route {
                         status: ParticipantStatusEnum.CONFIRMED
                     })
                 }
+
+                this.socketIo.emit('removeParticipant')
 
                 response
                     .status(200)

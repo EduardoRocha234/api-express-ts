@@ -69,7 +69,8 @@ export class FindEventByIdRoute implements Route {
                 id: participant.id,
                 userId: participant.userId,
                 participantName: participant.participantName,
-                status: participant.status
+                status: participant.status,
+                createdAt: participant.createdAt,
             }))
         }
 
