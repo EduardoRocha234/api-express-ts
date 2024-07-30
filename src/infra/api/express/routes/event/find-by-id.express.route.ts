@@ -10,6 +10,8 @@ export type FindEventByIdResponseDto = {
     maxParticipants: number
     createdAt: Date
     datetime: Date
+    startTime: Date
+    endTime: Date
     location: string
     participants: {
         id: number
@@ -65,12 +67,14 @@ export class FindEventByIdRoute implements Route {
             location: input!.location,
             createdAt: input!.createdAt,
             datetime: input!.datetime,
+            endTime: input!.endTime,
+            startTime: input!.startTime,
             participants: input!.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,
                 participantName: participant.participantName,
                 status: participant.status,
-                createdAt: participant.createdAt,
+                createdAt: participant.createdAt
             }))
         }
 

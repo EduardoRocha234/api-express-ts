@@ -12,7 +12,7 @@ const main = () => {
 
     io.on('connection', (socket) => {
         console.log(`A user connected`)
-        socket.emit('message', 'Welcome to the Server')
+        socket.emit('message', 'Server connected')
     })
 
     api.start(port)

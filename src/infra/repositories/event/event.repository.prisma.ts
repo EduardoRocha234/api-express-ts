@@ -14,7 +14,16 @@ export class EventRepositoryPrisma implements EventGateway {
     }
 
     public async save(event: Event): Promise<Event> {
-        const { createdAt, location, maxParticipants, name, sportId, datetime } = event
+        const {
+            createdAt,
+            location,
+            maxParticipants,
+            name,
+            sportId,
+            datetime,
+            endTime,
+            startTime
+        } = event
 
         const data = {
             createdAt,
@@ -22,6 +31,8 @@ export class EventRepositoryPrisma implements EventGateway {
             maxParticipants,
             name,
             sportId,
+            endTime,
+            startTime,
             datetime
         }
 
@@ -37,6 +48,8 @@ export class EventRepositoryPrisma implements EventGateway {
             name: eventCreated.name,
             sportId: eventCreated.sportId,
             datetime: eventCreated.datetime,
+            startTime: eventCreated.startTime,
+            endTime: eventCreated.endTime,
             participants: []
         })
 
@@ -59,6 +72,8 @@ export class EventRepositoryPrisma implements EventGateway {
                 name: event.name,
                 sportId: event.sportId,
                 datetime: event.datetime,
+                startTime: event.startTime,
+                endTime: event.endTime,
                 participants: event.participants.map((participant) => {
                     return Participant.with({
                         eventId: participant.eventId,
@@ -101,6 +116,8 @@ export class EventRepositoryPrisma implements EventGateway {
             name: event.name,
             sportId: event.sportId,
             datetime: event.datetime,
+            startTime: event.startTime,
+            endTime: event.endTime,
             participants: event.participants.map((participant) => {
                 return Participant.with({
                     eventId: participant.eventId,
@@ -142,6 +159,8 @@ export class EventRepositoryPrisma implements EventGateway {
             name: getEvent!.name,
             datetime: event.datetime,
             sportId: getEvent!.sportId,
+            startTime: getEvent!.startTime,
+            endTime: getEvent!.endTime,
             participants: getEvent!.participants
         })
 

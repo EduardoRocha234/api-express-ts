@@ -8,7 +8,7 @@ export class ApiExpress implements Api {
     private app: Express
     private server: HttpServer
     private io: SocketIOServer
-    private allowedOrigins = ['http://localhost:3000', 'http://10.0.0.127:3000']
+    private allowedOrigins: string[] = ['http://localhost:3000', 'http://10.0.0.127:3000']
 
     private constructor() {
         this.app = express()
@@ -52,7 +52,7 @@ export class ApiExpress implements Api {
     private listRoutes() {
         const routes = this.app._router.stack
             .filter((route: any) => route.route) // eslint-disable-line
-            .map((route: any) => ({ // eslint-disable-line
+            .map((route: any) => ({     // eslint-disable-line
                 path: route.route.path,
                 method: route.route.stack[0].method
             }))

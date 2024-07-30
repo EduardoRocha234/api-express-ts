@@ -38,8 +38,10 @@ model Event {
   sport           Sport @relation(fields: [sportId], references: [id])
   sportId         Int
   maxParticipants Int
-  createdAt        DateTime
-  datetime         DateTime
+  createdAt       DateTime
+  datetime        DateTime
+  startTime       DateTime
+  endTime         DateTime
   location        String
 
   participants    Participant[]
