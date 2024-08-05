@@ -14,6 +14,8 @@ export type ListEventsOutputDto = {
         startTime: Date
         endTime: Date
         location: string
+        maxOfParticipantsWaitingList: number
+        adminId: string
         participants: {
             id: number
             userId: string
@@ -51,6 +53,8 @@ export class ListEventUseCase implements Usecase<void, ListEventsOutputDto> {
                 datetime: event.datetime,
                 startTime: event.startTime,
                 endTime: event.endTime,
+                adminId: event.adminId,
+                maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 participants: event.participants.map((participant) => ({
                     id: participant.id,
                     userId: participant.userId,

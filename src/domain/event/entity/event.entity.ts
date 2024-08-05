@@ -10,6 +10,8 @@ export type EventProps = {
     datetime: Date
     startTime: Date
     endTime: Date
+    maxOfParticipantsWaitingList: number
+    adminId: string
     participants: Participant[]
 }
 
@@ -27,6 +29,8 @@ export class Event {
         datetime: Date,
         startTime: Date,
         endTime: Date,
+        maxOfParticipantsWaitingList: number,
+        adminId: string,
         participants?: Participant[]
     ): Event {
         return new Event({
@@ -39,6 +43,8 @@ export class Event {
             datetime,
             startTime,
             endTime,
+            maxOfParticipantsWaitingList,
+            adminId,
             participants: participants || []
         })
     }
@@ -91,5 +97,13 @@ export class Event {
 
     public get endTime(): Date {
         return this.props.endTime
+    }
+
+    public get maxOfParticipantsWaitingList(): number {
+        return this.props.maxOfParticipantsWaitingList
+    }
+
+    public get adminId(): string {
+        return this.props.adminId
     }
 }

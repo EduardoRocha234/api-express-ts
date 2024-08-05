@@ -8,7 +8,6 @@ import { InserParticipantUsecase } from '@usecases/participant/create.usecase'
 import { ParticipantRepositoryPrisma } from '@infra/repositories/participant/participant.repository.prisma'
 import { InsertParticipantInEventRoute } from '@infra/api/express/routes/event/insert-participant.express.route'
 import { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
-import { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/count-by-eventId-and-status.usecase'
 import { FindEventByIdRoute } from '@infra/api/express/routes/event/find-by-id.express.route'
 import { ListEventUseCase } from '@usecases/event/list.usecase'
 import { ListEventRoute } from '@infra/api/express/routes/event/list-event.express.route'
@@ -17,6 +16,7 @@ import { FindParticipantsByEventIdAndStatusUsecase } from '@usecases/participant
 import { DeleteParticipantUseCase } from '@usecases/participant/delete.usecase'
 import { FindParticipantByIdUseCase } from '@usecases/participant/find-by-id.usecase'
 import { ChangeStatusOfParticipantUseCase } from '@usecases/participant/change-status.usecase'
+import { FindParticipantsByEventIdUsecase } from '@usecases/participant/find-by-eventid.usecase'
 import type { Server as SocketIOServer } from 'socket.io'
 
 export default function useEventProvider(prismaClient: PrismaClient, socketIo: SocketIOServer) {
@@ -31,8 +31,8 @@ export default function useEventProvider(prismaClient: PrismaClient, socketIo: S
     const getAllEventsUseCase = ListEventUseCase.create(aRepository)
 
     const insertParticipantUseCase = InserParticipantUsecase.create(participantRepository)
-    const getCountOfParticipantsUseCase =
-        CountOfParticipantByEventIdAndStatusUsecase.create(participantRepository)
+    const findParticipantsOfEventUseCase =
+        FindParticipantsByEventIdUsecase.create(participantRepository)
     const findParticipantByEventIdAndStatusUseCase =
         FindParticipantsByEventIdAndStatusUsecase.create(participantRepository)
     const removeParticipantUseCase = DeleteParticipantUseCase.create(participantRepository)
@@ -42,7 +42,7 @@ export default function useEventProvider(prismaClient: PrismaClient, socketIo: S
 
     const insertParticipantRoute = InsertParticipantInEventRoute.create(
         findEventByIdUseCase,
-        getCountOfParticipantsUseCase,
+        findParticipantsOfEventUseCase,
         insertParticipantUseCase,
         socketIo,
         [authMiddleware]

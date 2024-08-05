@@ -12,6 +12,8 @@ export type CreateEventResponseDto = {
     startTime: Date
     endTime: Date
     location: string
+    maxOfParticipantsWaitingList: number
+    adminId: string
 }
 
 export class CreateEventRoute implements Route {
@@ -28,10 +30,29 @@ export class CreateEventRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const { name, sportId, maxParticipants, location, datetime, startTime, endTime } =
-                request.body
+            const {
+                name,
+                sportId,
+                maxParticipants,
+                location,
+                datetime,
+                startTime,
+                endTime,
+                adminId,
+                maxOfParticipantsWaitingList
+            } = request.body as CreateEventInputDto
 
-            if (!name || !sportId || !maxParticipants || !location || !datetime) {
+            if (
+                !name ||
+                !sportId ||
+                !maxParticipants ||
+                !location ||
+                !startTime ||
+                !adminId ||
+                !endTime ||
+                !adminId ||
+                !maxOfParticipantsWaitingList
+            ) {
                 response
                     .status(400)
                     .json({
@@ -41,21 +62,34 @@ export class CreateEventRoute implements Route {
                 return
             }
 
-            const input: CreateEventInputDto = {
-                location,
-                datetime,
-                maxParticipants,
-                name,
-                startTime,
-                endTime,
-                sportId
+            try {
+                const input: CreateEventInputDto = {
+                    location,
+                    datetime,
+                    maxParticipants,
+                    name,
+                    startTime,
+                    endTime,
+                    sportId,
+                    adminId,
+                    maxOfParticipantsWaitingList
+                }
+
+                const output: CreateEventResponseDto = await this.createEventService.execute(input)
+
+                const responseBody = this.present(output)
+
+                response.status(201).json(responseBody).send()
+            } catch (error) {
+                console.error(error)
+                response
+                    .status(500)
+                    .json({
+                        message: 'Ocorreu um erro interno ao tentar criar o evento: ' + error
+                    })
+                    .send()
+                return
             }
-
-            const output: CreateEventResponseDto = await this.createEventService.execute(input)
-
-            const responseBody = this.present(output)
-
-            response.status(201).json(responseBody).send()
         }
     }
 
@@ -81,7 +115,9 @@ export class CreateEventRoute implements Route {
             datetime: input.datetime,
             endTime: input.endTime,
             startTime: input.startTime,
-            sportId: input.sportId
+            sportId: input.sportId,
+            maxOfParticipantsWaitingList: input.maxOfParticipantsWaitingList,
+            adminId: input.adminId
         }
 
         return response

@@ -16,6 +16,8 @@ export type FindEventOutputDto =
           datetime: Date
           startTime: Date
           endTime: Date
+          maxOfParticipantsWaitingList: number
+          adminId: string
           participants: {
               id: number
               userId: string
@@ -54,7 +56,9 @@ export class FindEventByIdUsecase implements Usecase<FindEventInputDto, FindEven
             sportId: input.sportId,
             endTime: input.endTime,
             startTime: input.startTime,
-            participants: input.participants
+            participants: input.participants,
+            maxOfParticipantsWaitingList: input.maxOfParticipantsWaitingList,
+            adminId: input.adminId,
         }
     }
 }

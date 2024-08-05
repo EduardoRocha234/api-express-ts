@@ -13,6 +13,8 @@ export type FindEventByIdResponseDto = {
     startTime: Date
     endTime: Date
     location: string
+    maxOfParticipantsWaitingList: number
+    adminId: string
     participants: {
         id: number
         userId: string
@@ -36,13 +38,30 @@ export class FindEventByIdRoute implements Route {
         return async (request: Request, response: Response) => {
             const id = Number(request.params['id'])
 
-            const output = await this.findEventService.execute(id)
+            try {
+                const output = await this.findEventService.execute(id)
 
-            if (!output) response.status(404).json({}).send()
+                if (!output)
+                    response
+                        .status(404)
+                        .json({
+                            message: 'Evento não encontrado'
+                        })
+                        .send()
 
-            const responseBody = this.present(output)
+                const responseBody = this.present(output)
 
-            response.status(200).json(responseBody).send()
+                response.status(200).json(responseBody).send()
+            } catch (error) {
+                console.error(error)
+                response
+                    .status(500)
+                    .json({
+                        message: 'Ocorreu um erro interno  ' + error
+                    })
+                    .send()
+                return
+            }
         }
     }
 
@@ -69,6 +88,8 @@ export class FindEventByIdRoute implements Route {
             datetime: input!.datetime,
             endTime: input!.endTime,
             startTime: input!.startTime,
+            adminId: input!.adminId,
+            maxOfParticipantsWaitingList: input!.maxOfParticipantsWaitingList,
             participants: input!.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,

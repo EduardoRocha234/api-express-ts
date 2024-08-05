@@ -5,7 +5,7 @@ import type {
 } from '@domain/participants/entity/participants.entity'
 import type { ParticipantGateway } from '@domain/participants/gateway/participants.gateway'
 
-export type FindParticipantByEventIdOutputDto =
+export type FindParticipantByEventIdAndStatusOutputDto =
     | {
           id: number
           eventId: number
@@ -21,7 +21,7 @@ export type getCountParticipantInputDto = {
 }
 
 export class FindParticipantsByEventIdAndStatusUsecase
-    implements Usecase<getCountParticipantInputDto, FindParticipantByEventIdOutputDto>
+    implements Usecase<getCountParticipantInputDto, FindParticipantByEventIdAndStatusOutputDto>
 {
     private constructor(private readonly participantGateway: ParticipantGateway) {}
 
@@ -32,7 +32,7 @@ export class FindParticipantsByEventIdAndStatusUsecase
     public async execute({
         eventId,
         status
-    }: getCountParticipantInputDto): Promise<FindParticipantByEventIdOutputDto> {
+    }: getCountParticipantInputDto): Promise<FindParticipantByEventIdAndStatusOutputDto> {
         const participants = await this.participantGateway.findByStatusAndEventId(eventId, status)
 
         const output = this.presentOutput(participants)
@@ -40,7 +40,7 @@ export class FindParticipantsByEventIdAndStatusUsecase
         return output
     }
 
-    private presentOutput(input: Participant[]): FindParticipantByEventIdOutputDto {
+    private presentOutput(input: Participant[]): FindParticipantByEventIdAndStatusOutputDto {
         if (!input) return []
 
         return input.map((participant) => ({

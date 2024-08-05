@@ -20,6 +20,7 @@ model User {
   password        String
 
   participants    Participant[]
+  events          Event[]
 
   @@map("users")
 }
@@ -27,22 +28,26 @@ model User {
 model Sport {
   id              Int @id @default(autoincrement())
   name            String
+  
   events          Event[]
 
   @@map("sports")
 }
 
 model Event {
-  id              Int @id @default(autoincrement())
-  name            String
-  sport           Sport @relation(fields: [sportId], references: [id])
-  sportId         Int
-  maxParticipants Int
-  createdAt       DateTime
-  datetime        DateTime
-  startTime       DateTime
-  endTime         DateTime
-  location        String
+  id                              Int @id @default(autoincrement())
+  name                            String
+  sport                           Sport @relation(fields: [sportId], references: [id])
+  sportId                         Int
+  maxParticipants                 Int
+  createdAt                       DateTime
+  datetime                        DateTime
+  startTime                       DateTime
+  endTime                         DateTime
+  location                        String
+  maxOfParticipantsWaitingList    Int
+  user                            User @relation(fields: [adminId], references: [id])
+  adminId                        String
 
   participants    Participant[]
 
