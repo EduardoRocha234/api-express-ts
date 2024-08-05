@@ -76,6 +76,27 @@ export class ParticipantRepositoryPrisma implements ParticipantGateway {
         return participantsCount
     }
 
+    public async findParticipantsOfEvent(eventId: number): Promise<Participant[]> {
+        const participants = await this.prismaClient.participant.findMany({
+            where: {
+                eventId
+            }
+        })
+
+        const participantList = participants.map((participant) =>
+            Participant.with({
+                eventId: participant.eventId,
+                id: participant.id,
+                status: participant.status as ParticipantStatus,
+                userId: participant.userId,
+                participantName: participant.participantName,
+                createdAt: participant.createdAt
+            })
+        )
+
+        return participantList
+    }
+
     public async changeStatusOfParticipant(id: number, status: ParticipantStatus): Promise<void> {
         await this.prismaClient.participant.update({
             where: {

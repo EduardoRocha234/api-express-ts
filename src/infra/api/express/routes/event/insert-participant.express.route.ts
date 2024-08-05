@@ -5,35 +5,35 @@ import type {
     InsertParticipantInputDto
 } from '@usecases/participant/create.usecase'
 import type { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
-import type { CountOfParticipantByEventIdAndStatusUsecase } from '@usecases/participant/count-by-eventId-and-status.usecase'
 import { ParticipantStatusEnum } from '@domain/participants/entity/participants.entity'
 import type { Server as SocketIOServer } from 'socket.io'
+import type { FindParticipantsByEventIdUsecase } from '@usecases/participant/find-by-eventid.usecase'
 
 export class InsertParticipantInEventRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
         private readonly eventService: FindEventByIdUsecase,
-        private readonly getCountOfParticipants: CountOfParticipantByEventIdAndStatusUsecase,
+        private readonly getParticipants: FindParticipantsByEventIdUsecase,
         private readonly insertParticipantService: InserParticipantUsecase,
-        private readonly socketIo: SocketIOServer,
+        private readonly io: SocketIOServer,
         private readonly middlewares: Middlewares
     ) {}
 
     public static create(
         eventService: FindEventByIdUsecase,
-        getCountOfParticipants: CountOfParticipantByEventIdAndStatusUsecase,
+        getParticipants: FindParticipantsByEventIdUsecase,
         insertParticipantService: InserParticipantUsecase,
-        socketIo: SocketIOServer,
+        io: SocketIOServer,
         middlewares: Middlewares
     ) {
         return new InsertParticipantInEventRoute(
             '/event/:eventId/join/:userId',
             HttpMethod.POST,
             eventService,
-            getCountOfParticipants,
+            getParticipants,
             insertParticipantService,
-            socketIo,
+            io,
             middlewares
         )
     }
@@ -42,21 +42,33 @@ export class InsertParticipantInEventRoute implements Route {
         return async (request: Request, response: Response) => {
             const userId = String(request.params['userId'])
             const eventId = Number(request.params['eventId'])
-            const findEvent = await this.eventService.execute(eventId)
-
-            if (!findEvent) {
-                response.status(404).json({ message: 'Evento não encontrado' }).send()
-                return
-            }
 
             try {
-                const participantsCount = await this.getCountOfParticipants.execute({
-                    eventId,
-                    status: ParticipantStatusEnum.CONFIRMED
+                const findEvent = await this.eventService.execute(eventId)
+
+                if (!findEvent) {
+                    response.status(404).json({ message: 'Evento não encontrado' }).send()
+                    return
+                }
+
+                const participants = await this.getParticipants.execute({
+                    eventId
                 })
 
+                if (participants.length === findEvent.maxParticipants) {
+                    response.status(409).json({ message: 'O evento já está cheio' }).send()
+                    return
+                }
+
+                const numbersOfParticipantsConfirmed = participants.filter(
+                    (p) => p.status === ParticipantStatusEnum.CONFIRMED
+                ).length
+
+                const maxNumberOfParticipantsConfirmed =
+                    findEvent.maxParticipants - findEvent.maxOfParticipantsWaitingList
+
                 const status =
-                    participantsCount < findEvent.maxParticipants
+                    numbersOfParticipantsConfirmed < maxNumberOfParticipantsConfirmed
                         ? ParticipantStatusEnum.CONFIRMED
                         : ParticipantStatusEnum.WATING_LIST
 
@@ -68,7 +80,7 @@ export class InsertParticipantInEventRoute implements Route {
 
                 await this.insertParticipantService.execute(input)
 
-                this.socketIo.emit('insertParticipant', {
+                this.io.emit('insertParticipant', {
                     eventId: input.eventId,
                     particopant: input,
                     status: input.status
@@ -85,7 +97,9 @@ export class InsertParticipantInEventRoute implements Route {
                 response
                     .status(500)
                     .json({
-                        message: 'Ocorreu um erro interno: ' + error
+                        message:
+                            'Ocorreu um erro interno ao tentar adicionar o participante no evento: ' +
+                            error
                     })
                     .send()
                 return

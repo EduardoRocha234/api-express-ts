@@ -21,7 +21,7 @@ export class RemoveParticipantRoute implements Route {
         private readonly deleteParticipantService: DeleteParticipantUseCase,
         private readonly findParticipantService: FindParticipantByIdUseCase,
         private readonly changeStatusOfParticipantService: ChangeStatusOfParticipantUseCase,
-        private readonly socketIo: SocketIOServer,
+        private readonly io: SocketIOServer,
         private readonly middlewares: Middlewares
     ) {}
 
@@ -30,7 +30,7 @@ export class RemoveParticipantRoute implements Route {
         getParticipantsService: FindParticipantsByEventIdAndStatusUsecase,
         deleteParticipantService: DeleteParticipantUseCase,
         findParticipantService: FindParticipantByIdUseCase,
-        socketIo: SocketIOServer,
+        io: SocketIOServer,
         changeStatusOfParticipantService: ChangeStatusOfParticipantUseCase,
         middlewares: Middlewares
     ) {
@@ -42,7 +42,7 @@ export class RemoveParticipantRoute implements Route {
             deleteParticipantService,
             findParticipantService,
             changeStatusOfParticipantService,
-            socketIo,
+            io,
             middlewares
         )
     }
@@ -52,38 +52,46 @@ export class RemoveParticipantRoute implements Route {
             const eventId = Number(request.params['eventId'])
             const userId = String(request.params['userId'])
 
-            const findEvent = await this.eventService.execute(eventId)
-
-            if (!findEvent) {
-                response.status(404).json({ message: 'Evento não encontrado' }).send()
-                return
-            }
-
-            const findParticipant = await this.findParticipantService.execute({ eventId, userId })
-
-            if (!findParticipant) {
-                response.status(404).json({ message: 'Participante não encontrado' }).send()
-                return
-            }
-
             try {
-                await this.deleteParticipantService.execute(findParticipant.id)
+                const findEvent = await this.eventService.execute(eventId)
 
-                const participantsWaitingList = await this.getParticipantsService.execute({
-                    eventId,
-                    status: ParticipantStatusEnum.WATING_LIST
-                })
-
-                if (participantsWaitingList.length > 0) {
-                    const firstParticipantWatingList = participantsWaitingList[0]
-
-                    await this.changeStatusOfParticipantService.execute({
-                        id: firstParticipantWatingList.id,
-                        status: ParticipantStatusEnum.CONFIRMED
-                    })
+                if (!findEvent) {
+                    response.status(404).json({ message: 'Evento não encontrado' }).send()
+                    return
                 }
 
-                this.socketIo.emit('removeParticipant')
+                const findParticipant = await this.findParticipantService.execute({
+                    eventId,
+                    userId
+                })
+
+                if (!findParticipant) {
+                    response.status(404).json({ message: 'Participante não encontrado' }).send()
+                    return
+                }
+
+                if (findParticipant.status === ParticipantStatusEnum.CONFIRMED) {
+                    const participantsWaitingList = await this.getParticipantsService.execute({
+                        eventId,
+                        status: ParticipantStatusEnum.WATING_LIST
+                    })
+
+                    console.log('teste')
+                    console.log(participantsWaitingList)
+
+                    if (participantsWaitingList.length > 0) {
+                        const firstParticipantWatingList = participantsWaitingList[0]
+
+                        await this.changeStatusOfParticipantService.execute({
+                            id: firstParticipantWatingList.id,
+                            status: ParticipantStatusEnum.CONFIRMED
+                        })
+                    }
+                }
+
+                await this.deleteParticipantService.execute(findParticipant.id)
+
+                this.io.emit('removeParticipant')
 
                 response
                     .status(200)

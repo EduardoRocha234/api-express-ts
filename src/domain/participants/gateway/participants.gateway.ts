@@ -12,5 +12,6 @@ export interface ParticipantGateway {
     findByUserIdAndEventId(userId: string, eventId: number): Promise<Participant | undefined>
     delete(id: number): Promise<void>
     changeStatusOfParticipant(id: number, status: ParticipantStatus): Promise<void>
+    findParticipantsOfEvent(eventId: number): Promise<Participant[]>
     // update(user: Event): Promise<Event>
 }
