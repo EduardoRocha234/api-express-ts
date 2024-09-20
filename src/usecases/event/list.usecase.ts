@@ -1,29 +1,10 @@
 import type { Usecase } from '../usecase'
-import type { ParticipantStatus } from '@domain/participants/entity/participants.entity'
+import type { Participant } from '@domain/participants/entity/participants.entity'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
-import type { Event } from '@domain/event/entity/event.entity'
+import type { Event, EventProps } from '@domain/event/entity/event.entity'
 
 export type ListEventsOutputDto = {
-    events: {
-        id: number
-        name: string
-        sportId: number
-        maxParticipants: number
-        createdAt: Date
-        datetime: Date
-        startTime: Date
-        endTime: Date
-        location: string
-        maxOfParticipantsWaitingList: number
-        adminId: string
-        participants: {
-            id: number
-            userId: string
-            participantName?: string
-            status: ParticipantStatus
-            createdAt: Date
-        }[]
-    }[]
+    events: EventProps[]
 }
 
 export class ListEventUseCase implements Usecase<void, ListEventsOutputDto> {
@@ -55,14 +36,15 @@ export class ListEventUseCase implements Usecase<void, ListEventsOutputDto> {
                 endTime: event.endTime,
                 adminId: event.adminId,
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
+                openParticipantsListDate: event.openParticipantsListDate,
                 participants: event.participants.map((participant) => ({
                     id: participant.id,
                     userId: participant.userId,
                     participantName: participant.participantName,
                     status: participant.status,
                     createdAt: participant.createdAt
-                }))
-            }))
+                })) as Participant[]
+            })) as EventProps[]
         }
     }
 }

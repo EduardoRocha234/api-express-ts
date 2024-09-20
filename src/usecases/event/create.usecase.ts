@@ -1,32 +1,10 @@
-import { Event } from '@domain/event/entity/event.entity'
+import { Event, type EventProps } from '@domain/event/entity/event.entity'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
 import type { Usecase } from '@usecases/usecase'
 
-export type CreateEventInputDto = {
-    name: string
-    sportId: number
-    maxParticipants: number
-    datetime: Date
-    startTime: Date
-    endTime: Date
-    location: string
-    maxOfParticipantsWaitingList: number
-    adminId: string
-}
+export type CreateEventInputDto = Omit<EventProps, 'id' | 'participants' | 'createdAt'>
 
-export type CreateEventOutputDto = {
-    id: number
-    name: string
-    sportId: number
-    maxParticipants: number
-    createdAt: Date
-    datetime: Date
-    startTime: Date
-    endTime: Date
-    location: string
-    maxOfParticipantsWaitingList: number
-    adminId: string
-}
+export type CreateEventOutputDto = Omit<EventProps, 'participants'>
 
 export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEventOutputDto> {
     private constructor(private readonly eventGateway: EventGateway) {}
@@ -44,7 +22,8 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
         endTime,
         sportId,
         adminId,
-        maxOfParticipantsWaitingList
+        maxOfParticipantsWaitingList,
+        openParticipantsListDate
     }: CreateEventInputDto): Promise<CreateEventOutputDto> {
         const aEvent = Event.create(
             0,
@@ -55,6 +34,7 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
             datetime,
             startTime,
             endTime,
+            openParticipantsListDate,
             maxOfParticipantsWaitingList,
             adminId
         )
@@ -76,6 +56,7 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
             datetime: e.datetime,
             startTime: e.startTime,
             endTime: e.endTime,
+            openParticipantsListDate: e.openParticipantsListDate,
             sportId: e.sportId,
             adminId: e.adminId,
             maxOfParticipantsWaitingList: e.maxOfParticipantsWaitingList

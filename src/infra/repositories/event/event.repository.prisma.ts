@@ -24,6 +24,7 @@ export class EventRepositoryPrisma implements EventGateway {
             endTime,
             startTime,
             adminId,
+            openParticipantsListDate,
             maxOfParticipantsWaitingList
         } = event
 
@@ -37,7 +38,8 @@ export class EventRepositoryPrisma implements EventGateway {
             startTime,
             datetime,
             adminId,
-            maxOfParticipantsWaitingList
+            maxOfParticipantsWaitingList,
+            openParticipantsListDate
         }
 
         const eventCreated = await this.prismaClient.event.create({
@@ -56,6 +58,7 @@ export class EventRepositoryPrisma implements EventGateway {
             endTime: eventCreated.endTime,
             adminId: eventCreated.adminId,
             maxOfParticipantsWaitingList: eventCreated.maxOfParticipantsWaitingList,
+            openParticipantsListDate: eventCreated.openParticipantsListDate,
             participants: []
         })
 
@@ -80,6 +83,7 @@ export class EventRepositoryPrisma implements EventGateway {
                 datetime: event.datetime,
                 startTime: event.startTime,
                 endTime: event.endTime,
+                openParticipantsListDate: event.openParticipantsListDate,
                 adminId: event.adminId,
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 participants: event.participants.map((participant) => {
@@ -128,6 +132,7 @@ export class EventRepositoryPrisma implements EventGateway {
             endTime: event.endTime,
             adminId: event.adminId,
             maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
+            openParticipantsListDate: event.openParticipantsListDate,
             participants: event.participants.map((participant) => {
                 return Participant.with({
                     eventId: participant.eventId,
@@ -154,6 +159,7 @@ export class EventRepositoryPrisma implements EventGateway {
             adminId,
             datetime,
             endTime,
+            openParticipantsListDate,
             maxOfParticipantsWaitingList,
             startTime
         } = event
@@ -168,6 +174,7 @@ export class EventRepositoryPrisma implements EventGateway {
             datetime,
             endTime,
             maxOfParticipantsWaitingList,
+            openParticipantsListDate,
             startTime
         }
 
@@ -188,6 +195,7 @@ export class EventRepositoryPrisma implements EventGateway {
             sportId: getEvent!.sportId,
             startTime: getEvent!.startTime,
             endTime: getEvent!.endTime,
+            openParticipantsListDate: getEvent!.openParticipantsListDate,
             adminId: getEvent!.adminId,
             maxOfParticipantsWaitingList: getEvent!.maxOfParticipantsWaitingList,
             participants: getEvent!.participants

@@ -44,6 +44,7 @@ model Event {
   datetime                        DateTime
   startTime                       DateTime
   endTime                         DateTime
+  openParticipantsListDate        DateTime?
   location                        String
   maxOfParticipantsWaitingList    Int
   user                            User @relation(fields: [adminId], references: [id])

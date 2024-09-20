@@ -1,20 +1,9 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { CreateEventInputDto, CreateEventUsecase } from '@usecases/event/create.usecase'
+import type { EventProps } from '@domain/event/entity/event.entity'
 
-export type CreateEventResponseDto = {
-    id: number
-    name: string
-    sportId: number
-    maxParticipants: number
-    createdAt: Date
-    datetime: Date
-    startTime: Date
-    endTime: Date
-    location: string
-    maxOfParticipantsWaitingList: number
-    adminId: string
-}
+export type CreateEventResponseDto = Omit<EventProps, 'participants'>
 
 export class CreateEventRoute implements Route {
     private constructor(
@@ -39,8 +28,21 @@ export class CreateEventRoute implements Route {
                 startTime,
                 endTime,
                 adminId,
-                maxOfParticipantsWaitingList
+                maxOfParticipantsWaitingList,
+                openParticipantsListDate
             } = request.body as CreateEventInputDto
+
+            console.log(
+                name,
+                sportId,
+                maxParticipants,
+                location,
+                datetime,
+                startTime,
+                endTime,
+                adminId,
+                maxOfParticipantsWaitingList
+            )
 
             if (
                 !name ||
@@ -62,6 +64,8 @@ export class CreateEventRoute implements Route {
                 return
             }
 
+            console
+
             try {
                 const input: CreateEventInputDto = {
                     location,
@@ -72,7 +76,8 @@ export class CreateEventRoute implements Route {
                     endTime,
                     sportId,
                     adminId,
-                    maxOfParticipantsWaitingList
+                    maxOfParticipantsWaitingList,
+                    openParticipantsListDate
                 }
 
                 const output: CreateEventResponseDto = await this.createEventService.execute(input)
@@ -117,6 +122,7 @@ export class CreateEventRoute implements Route {
             startTime: input.startTime,
             sportId: input.sportId,
             maxOfParticipantsWaitingList: input.maxOfParticipantsWaitingList,
+            openParticipantsListDate: input.openParticipantsListDate,
             adminId: input.adminId
         }
 

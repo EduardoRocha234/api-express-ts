@@ -1,32 +1,10 @@
 import type { Usecase } from '../usecase'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
-import type { Event } from '@domain/event/entity/event.entity'
-import type { ParticipantStatus } from '@domain/participants/entity/participants.entity'
+import type { Event, EventProps } from '@domain/event/entity/event.entity'
 
 export type FindEventInputDto = number
 
-export type FindEventOutputDto =
-    | {
-          id: number
-          name: string
-          sportId: number
-          maxParticipants: number
-          createdAt: Date
-          location: string
-          datetime: Date
-          startTime: Date
-          endTime: Date
-          maxOfParticipantsWaitingList: number
-          adminId: string
-          participants: {
-              id: number
-              userId: string
-              participantName?: string
-              createdAt: Date
-              status: ParticipantStatus
-          }[]
-      }
-    | undefined
+export type FindEventOutputDto = EventProps | undefined
 
 export class FindEventByIdUsecase implements Usecase<FindEventInputDto, FindEventOutputDto> {
     private constructor(private readonly eventGateway: EventGateway) {}
@@ -58,7 +36,8 @@ export class FindEventByIdUsecase implements Usecase<FindEventInputDto, FindEven
             startTime: input.startTime,
             participants: input.participants,
             maxOfParticipantsWaitingList: input.maxOfParticipantsWaitingList,
-            adminId: input.adminId,
-        }
+            openParticipantsListDate: input.openParticipantsListDate,
+            adminId: input.adminId
+        } as EventProps
     }
 }

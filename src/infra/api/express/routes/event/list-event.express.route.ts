@@ -1,29 +1,11 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import type { ParticipantStatus } from '@domain/participants/entity/participants.entity'
+import type { Participant } from '@domain/participants/entity/participants.entity'
 import type { ListEventsOutputDto, ListEventUseCase } from '@usecases/event/list.usecase'
+import type { EventProps } from '@domain/event/entity/event.entity'
 
 export type ListEventResponseDto = {
-    events: {
-        id: number
-        name: string
-        sportId: number
-        maxParticipants: number
-        createdAt: Date
-        datetime: Date
-        startTime: Date
-        endTime: Date
-        location: string
-        maxOfParticipantsWaitingList: number
-        adminId: string
-        participants: {
-            id: number
-            userId: string
-            participantName?: string
-            status: ParticipantStatus
-            createdAt: Date
-        }[]
-    }[]
+    events: EventProps[]
 }
 
 export class ListEventRoute implements Route {
@@ -42,6 +24,8 @@ export class ListEventRoute implements Route {
         return async (request: Request, response: Response) => {
             try {
                 const output = await this.listEventService.execute()
+
+                console.log(output)
 
                 const responseBody = this.present(output)
 
@@ -83,6 +67,7 @@ export class ListEventRoute implements Route {
                 datetime: event.datetime,
                 startTime: event.startTime,
                 endTime: event.endTime,
+                openParticipantsListDate: event.openParticipantsListDate,
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 adminId: event.adminId,
                 participants: event.participants.map((participant) => ({
@@ -91,7 +76,7 @@ export class ListEventRoute implements Route {
                     participantName: participant.participantName,
                     status: participant.status,
                     createdAt: participant.createdAt
-                }))
+                })) as Participant[]
             }))
         }
 

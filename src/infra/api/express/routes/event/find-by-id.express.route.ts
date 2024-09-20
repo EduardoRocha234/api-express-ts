@@ -1,26 +1,10 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import { type ParticipantStatus } from '@domain/participants/entity/participants.entity'
+import { Participant } from '@domain/participants/entity/participants.entity'
 import type { FindEventByIdUsecase, FindEventOutputDto } from '@usecases/event/find-by-id.usecase'
+import type { EventProps } from '@domain/event/entity/event.entity'
 
-export type FindEventByIdResponseDto = {
-    id: number
-    name: string
-    sportId: number
-    maxParticipants: number
-    createdAt: Date
-    datetime: Date
-    startTime: Date
-    endTime: Date
-    location: string
-    maxOfParticipantsWaitingList: number
-    adminId: string
-    participants: {
-        id: number
-        userId: string
-        status: ParticipantStatus
-    }[]
-}
+export type FindEventByIdResponseDto = EventProps
 
 export class FindEventByIdRoute implements Route {
     private constructor(
@@ -90,13 +74,14 @@ export class FindEventByIdRoute implements Route {
             startTime: input!.startTime,
             adminId: input!.adminId,
             maxOfParticipantsWaitingList: input!.maxOfParticipantsWaitingList,
+            openParticipantsListDate: input!.openParticipantsListDate,
             participants: input!.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,
                 participantName: participant.participantName,
                 status: participant.status,
                 createdAt: participant.createdAt
-            }))
+            })) as Participant[]
         }
 
         return response
