@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
-import { Event } from '@domain/event/entity/event.entity'
+import { EdaysOfWeek, Event } from '@domain/event/entity/event.entity'
 import {
     Participant,
     type ParticipantStatus
@@ -25,6 +25,7 @@ export class EventRepositoryPrisma implements EventGateway {
             startTime,
             adminId,
             openParticipantsListDate,
+            recurringDay,
             maxOfParticipantsWaitingList
         } = event
 
@@ -39,6 +40,7 @@ export class EventRepositoryPrisma implements EventGateway {
             datetime,
             adminId,
             maxOfParticipantsWaitingList,
+            recurringDay,
             openParticipantsListDate
         }
 
@@ -57,12 +59,20 @@ export class EventRepositoryPrisma implements EventGateway {
             startTime: eventCreated.startTime,
             endTime: eventCreated.endTime,
             adminId: eventCreated.adminId,
+            recurringDay: eventCreated.recurringDay as keyof typeof EdaysOfWeek | null,
             maxOfParticipantsWaitingList: eventCreated.maxOfParticipantsWaitingList,
             openParticipantsListDate: eventCreated.openParticipantsListDate,
             participants: []
         })
 
         return aEvent
+    }
+
+    public async saveMany(events: Event[]): Promise<void> {
+        await this.prismaClient.event.createMany({
+            data: events,
+            skipDuplicates: true
+        })
     }
 
     public async list(): Promise<Event[]> {
@@ -85,6 +95,7 @@ export class EventRepositoryPrisma implements EventGateway {
                 endTime: event.endTime,
                 openParticipantsListDate: event.openParticipantsListDate,
                 adminId: event.adminId,
+                recurringDay: event.recurringDay as keyof typeof EdaysOfWeek | null,
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 participants: event.participants.map((participant) => {
                     return Participant.with({
@@ -96,6 +107,37 @@ export class EventRepositoryPrisma implements EventGateway {
                         createdAt: participant.createdAt
                     })
                 })
+            })
+
+            return eventWith
+        })
+
+        return eventsList
+    }
+
+    public async findRecurringEventsByDay(day: keyof typeof EdaysOfWeek): Promise<Event[]> {
+        const recurringEvents = await this.prismaClient.event.findMany({
+            where: {
+                recurringDay: day
+            }
+        })
+
+        const eventsList = recurringEvents.map((event) => {
+            const eventWith = Event.with({
+                id: event.id,
+                createdAt: event.createdAt,
+                location: event.location,
+                maxParticipants: event.maxParticipants,
+                name: event.name,
+                sportId: event.sportId,
+                datetime: event.datetime,
+                startTime: event.startTime,
+                endTime: event.endTime,
+                openParticipantsListDate: event.openParticipantsListDate,
+                adminId: event.adminId,
+                recurringDay: event.recurringDay as keyof typeof EdaysOfWeek | null,
+                maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
+                participants: []
             })
 
             return eventWith
@@ -130,6 +172,7 @@ export class EventRepositoryPrisma implements EventGateway {
             datetime: event.datetime,
             startTime: event.startTime,
             endTime: event.endTime,
+            recurringDay: event.recurringDay as keyof typeof EdaysOfWeek | null,
             adminId: event.adminId,
             maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
             openParticipantsListDate: event.openParticipantsListDate,
@@ -197,6 +240,7 @@ export class EventRepositoryPrisma implements EventGateway {
             endTime: getEvent!.endTime,
             openParticipantsListDate: getEvent!.openParticipantsListDate,
             adminId: getEvent!.adminId,
+            recurringDay: getEvent!.recurringDay as keyof typeof EdaysOfWeek | null,
             maxOfParticipantsWaitingList: getEvent!.maxOfParticipantsWaitingList,
             participants: getEvent!.participants
         })

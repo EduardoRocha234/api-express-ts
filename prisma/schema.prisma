@@ -43,12 +43,13 @@ model Event {
   createdAt                       DateTime
   datetime                        DateTime
   startTime                       DateTime
-  endTime                         DateTime
+  endTime                         DateTime 
   openParticipantsListDate        DateTime?
   location                        String
   maxOfParticipantsWaitingList    Int
   user                            User @relation(fields: [adminId], references: [id])
-  adminId                        String
+  adminId                         String
+  recurringDay                    String?
 
   participants    Participant[]
 

@@ -1,5 +1,15 @@
 import type { Participant } from '@domain/participants/entity/participants.entity'
 
+export enum EdaysOfWeek {
+    Monday = 1,
+    Tuesday = 2,
+    Wednesday = 3,
+    Thursday = 4,
+    Friday = 5,
+    Saturday = 6,
+    Sunday = 0
+}
+
 export type EventProps = {
     id: number
     name: string
@@ -13,6 +23,7 @@ export type EventProps = {
     openParticipantsListDate: Date | null
     maxOfParticipantsWaitingList: number
     adminId: string
+    recurringDay: keyof typeof EdaysOfWeek | null
     participants: Participant[]
 }
 
@@ -33,6 +44,7 @@ export class Event {
         openParticipantsListDate: Date | null,
         maxOfParticipantsWaitingList: number,
         adminId: string,
+        recurringDay: keyof typeof EdaysOfWeek | null,
         participants?: Participant[]
     ): Event {
         return new Event({
@@ -48,6 +60,7 @@ export class Event {
             openParticipantsListDate,
             maxOfParticipantsWaitingList,
             adminId,
+            recurringDay,
             participants: participants || []
         })
     }
@@ -112,5 +125,9 @@ export class Event {
 
     public get adminId(): string {
         return this.props.adminId
+    }
+
+    public get recurringDay(): keyof typeof EdaysOfWeek | null {
+        return this.props.recurringDay
     }
 }

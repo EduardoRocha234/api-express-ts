@@ -4,7 +4,10 @@ import type { Usecase } from '@usecases/usecase'
 
 export type CreateEventInputDto = Omit<EventProps, 'id' | 'participants' | 'createdAt'>
 
-export type CreateEventOutputDto = Omit<EventProps, 'participants'>
+export type CreateEventOutputDto = Omit<
+    EventProps,
+    'participants' | 'recurringDay' | 'recurringTime'
+>
 
 export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEventOutputDto> {
     private constructor(private readonly eventGateway: EventGateway) {}
@@ -23,7 +26,8 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
         sportId,
         adminId,
         maxOfParticipantsWaitingList,
-        openParticipantsListDate
+        openParticipantsListDate,
+        recurringDay,
     }: CreateEventInputDto): Promise<CreateEventOutputDto> {
         const aEvent = Event.create(
             0,
@@ -36,7 +40,8 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
             endTime,
             openParticipantsListDate,
             maxOfParticipantsWaitingList,
-            adminId
+            adminId,
+            recurringDay,
         )
 
         const eventCreated = await this.eventGateway.save(aEvent)

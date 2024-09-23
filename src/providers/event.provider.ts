@@ -18,6 +18,7 @@ import { FindParticipantByIdUseCase } from '@usecases/participant/find-by-id.use
 import { ChangeStatusOfParticipantUseCase } from '@usecases/participant/change-status.usecase'
 import { FindParticipantsByEventIdUsecase } from '@usecases/participant/find-by-eventid.usecase'
 import type { Server as SocketIOServer } from 'socket.io'
+import { AutoCreateEventUsecase } from '@usecases/event/auto-create.usecase'
 
 export default function useEventProvider(prismaClient: PrismaClient, socketIo: SocketIOServer) {
     const jwtAdapter = new JwtAdapter()
@@ -30,6 +31,7 @@ export default function useEventProvider(prismaClient: PrismaClient, socketIo: S
     const findEventByIdUseCase = FindEventByIdUsecase.create(aRepository)
     const getAllEventsUseCase = ListEventUseCase.create(aRepository)
 
+    const autoCreateEventUseCase = AutoCreateEventUsecase.create(aRepository)
     const insertParticipantUseCase = InserParticipantUsecase.create(participantRepository)
     const findParticipantsOfEventUseCase =
         FindParticipantsByEventIdUsecase.create(participantRepository)
@@ -60,6 +62,7 @@ export default function useEventProvider(prismaClient: PrismaClient, socketIo: S
     const findEventByIdRoute = FindEventByIdRoute.create(findEventByIdUseCase, [authMiddleware])
     const getAllEventsRoute = ListEventRoute.create(getAllEventsUseCase, [authMiddleware])
 
+    autoCreateEventUseCase.execute()
     return [
         createEventRoute,
         findEventByIdRoute,

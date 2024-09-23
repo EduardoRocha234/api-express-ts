@@ -3,7 +3,7 @@ import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { CreateEventInputDto, CreateEventUsecase } from '@usecases/event/create.usecase'
 import type { EventProps } from '@domain/event/entity/event.entity'
 
-export type CreateEventResponseDto = Omit<EventProps, 'participants'>
+export type CreateEventResponseDto = Omit<EventProps, 'participants' | 'recurringDay'>
 
 export class CreateEventRoute implements Route {
     private constructor(
@@ -29,7 +29,8 @@ export class CreateEventRoute implements Route {
                 endTime,
                 adminId,
                 maxOfParticipantsWaitingList,
-                openParticipantsListDate
+                openParticipantsListDate,
+                recurringDay
             } = request.body as CreateEventInputDto
 
             console.log(
@@ -41,7 +42,8 @@ export class CreateEventRoute implements Route {
                 startTime,
                 endTime,
                 adminId,
-                maxOfParticipantsWaitingList
+                maxOfParticipantsWaitingList,
+                recurringDay
             )
 
             if (
@@ -52,8 +54,7 @@ export class CreateEventRoute implements Route {
                 !startTime ||
                 !adminId ||
                 !endTime ||
-                !adminId ||
-                !maxOfParticipantsWaitingList
+                !adminId
             ) {
                 response
                     .status(400)
@@ -77,7 +78,8 @@ export class CreateEventRoute implements Route {
                     sportId,
                     adminId,
                     maxOfParticipantsWaitingList,
-                    openParticipantsListDate
+                    openParticipantsListDate,
+                    recurringDay
                 }
 
                 const output: CreateEventResponseDto = await this.createEventService.execute(input)
