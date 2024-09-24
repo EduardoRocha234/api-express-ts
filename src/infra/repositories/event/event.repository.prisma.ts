@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client'
-import type { EventGateway } from '@domain/event/gateway/event.gateway'
+import type { EventGateway, ListEventOutput } from '@domain/event/gateway/event.gateway'
 import { EdaysOfWeek, Event } from '@domain/event/entity/event.entity'
 import {
     Participant,
     type ParticipantStatus
 } from '@domain/participants/entity/participants.entity'
+import type { PaginationInput } from '@domain/shared/pagination.interface'
 
 export class EventRepositoryPrisma implements EventGateway {
     private constructor(private readonly prismaClient: PrismaClient) {}
@@ -69,7 +70,6 @@ export class EventRepositoryPrisma implements EventGateway {
     }
 
     public async saveMany(events: Event[]): Promise<void> {
-        console.log('saving events', events)
         const data = events.map((event) => ({
             createdAt: event.createdAt,
             location: event.location,
@@ -85,15 +85,21 @@ export class EventRepositoryPrisma implements EventGateway {
             openParticipantsListDate: event.openParticipantsListDate
         }))
 
-        const res = await this.prismaClient.event.createMany({
-            data,
+        await this.prismaClient.event.createMany({
+            data
         })
-
-        console.log(res)
     }
 
-    public async list(): Promise<Event[]> {
+    public async list({ page, pageSize }: PaginationInput): Promise<ListEventOutput> {
+        console.log(page, pageSize)
+        const skip = (page - 1) * pageSize
+        const take = pageSize
+
+        console.log(skip, take)
+
         const events = await this.prismaClient.event.findMany({
+            skip,
+            take,
             include: {
                 participants: true
             }
@@ -129,7 +135,26 @@ export class EventRepositoryPrisma implements EventGateway {
             return eventWith
         })
 
-        return eventsList
+        const totalRecords = await this.prismaClient.event.count()
+        const totalPages = Math.ceil(totalRecords / pageSize)
+
+        // Calcula o valor de nextPage e previousPage
+        const nextPage = page < totalPages ? page + 1 : null
+        const previousPage = page > 1 ? page - 1 : null
+
+        // Verifica se a página atual é a última
+        const isLastPage = page >= totalPages
+
+        return {
+            events: eventsList,
+            metadata: {
+                currentPage: page,
+                totalPages,
+                isLastPage,
+                nextPage,
+                previousPage
+            }
+        }
     }
 
     public async findRecurringEventsByDay(day: keyof typeof EdaysOfWeek): Promise<Event[]> {

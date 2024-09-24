@@ -33,19 +33,6 @@ export class CreateEventRoute implements Route {
                 recurringDay
             } = request.body as CreateEventInputDto
 
-            console.log(
-                name,
-                sportId,
-                maxParticipants,
-                location,
-                datetime,
-                startTime,
-                endTime,
-                adminId,
-                maxOfParticipantsWaitingList,
-                recurringDay
-            )
-
             if (
                 !name ||
                 !sportId ||
@@ -64,8 +51,6 @@ export class CreateEventRoute implements Route {
                     .send()
                 return
             }
-
-            console
 
             try {
                 const input: CreateEventInputDto = {

@@ -3,9 +3,11 @@ import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { Participant } from '@domain/participants/entity/participants.entity'
 import type { ListEventsOutputDto, ListEventUseCase } from '@usecases/event/list.usecase'
 import type { EventProps } from '@domain/event/entity/event.entity'
+import type { PaginationOutput } from '@domain/shared/pagination.interface'
 
 export type ListEventResponseDto = {
     events: EventProps[]
+    metadata: PaginationOutput
 }
 
 export class ListEventRoute implements Route {
@@ -22,10 +24,13 @@ export class ListEventRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            try {
-                const output = await this.listEventService.execute()
+            const { page, pageSize } = request.query
 
-                console.log(output)
+            try {
+                const output = await this.listEventService.execute({
+                    page: Number(page) || 1,
+                    pageSize: Number(pageSize) || 10
+                })
 
                 const responseBody = this.present(output)
 
@@ -70,6 +75,7 @@ export class ListEventRoute implements Route {
                 openParticipantsListDate: event.openParticipantsListDate,
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 adminId: event.adminId,
+                recurringDay: event.recurringDay,
                 participants: event.participants.map((participant) => ({
                     id: participant.id,
                     userId: participant.userId,
@@ -77,7 +83,8 @@ export class ListEventRoute implements Route {
                     status: participant.status,
                     createdAt: participant.createdAt
                 })) as Participant[]
-            }))
+            })),
+            metadata: input.metadata
         }
 
         return response

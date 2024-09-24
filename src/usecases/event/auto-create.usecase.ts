@@ -20,7 +20,6 @@ export class AutoCreateEventUsecase implements Usecase<void, void> {
         cron.schedule(
             cronExpression,
             async () => {
-                console.log('teste')
                 await this.createRecurringEventsForToday()
             },
             {
