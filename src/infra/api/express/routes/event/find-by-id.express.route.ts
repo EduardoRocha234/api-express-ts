@@ -61,7 +61,9 @@ export class FindEventByIdRoute implements Route {
         return this.middlewares
     }
 
-    private present(input: FindEventOutputDto): FindEventByIdResponseDto {
+    private present(input: FindEventOutputDto): FindEventByIdResponseDto | null {
+        if (!input) return null
+
         const response: FindEventOutputDto = {
             id: input!.id,
             name: input!.name,
@@ -75,6 +77,7 @@ export class FindEventByIdRoute implements Route {
             adminId: input!.adminId,
             maxOfParticipantsWaitingList: input!.maxOfParticipantsWaitingList,
             openParticipantsListDate: input!.openParticipantsListDate,
+            recurringDay: input!.recurringDay,
             participants: input!.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,

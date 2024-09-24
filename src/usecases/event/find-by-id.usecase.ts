@@ -36,6 +36,7 @@ export class FindEventByIdUsecase implements Usecase<FindEventInputDto, FindEven
             startTime: input.startTime,
             participants: input.participants,
             maxOfParticipantsWaitingList: input.maxOfParticipantsWaitingList,
+            recurringDay: input.recurringDay,
             openParticipantsListDate: input.openParticipantsListDate,
             adminId: input.adminId
         } as EventProps

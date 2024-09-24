@@ -69,10 +69,27 @@ export class EventRepositoryPrisma implements EventGateway {
     }
 
     public async saveMany(events: Event[]): Promise<void> {
-        await this.prismaClient.event.createMany({
-            data: events,
-            skipDuplicates: true
+        console.log('saving events', events)
+        const data = events.map((event) => ({
+            createdAt: event.createdAt,
+            location: event.location,
+            maxParticipants: event.maxParticipants,
+            name: event.name,
+            sportId: event.sportId,
+            datetime: event.datetime,
+            endTime: event.endTime,
+            startTime: event.startTime,
+            adminId: event.adminId,
+            recurringDay: event.recurringDay as keyof typeof EdaysOfWeek | null,
+            maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
+            openParticipantsListDate: event.openParticipantsListDate
+        }))
+
+        const res = await this.prismaClient.event.createMany({
+            data,
         })
+
+        console.log(res)
     }
 
     public async list(): Promise<Event[]> {
