@@ -1,13 +1,20 @@
 export type SportProps = {
     id: number
     name: string
+    displayColor: string
+    displayIcon: string
 }
 
 export class Sport {
     private constructor(private props: SportProps) {}
 
-    public static create(id: number, name: string): Sport {
-        return new Sport({ id, name })
+    public static create(
+        id: number,
+        name: string,
+        displayColor: string,
+        displayIcon: string
+    ): Sport {
+        return new Sport({ id, name, displayColor, displayIcon })
     }
 
     public static with(props: SportProps) {
@@ -20,5 +27,13 @@ export class Sport {
 
     public get name(): string {
         return this.props.name
+    }
+
+    public get displayColor(): string {
+        return this.props.displayColor
+    }
+
+    public get displayIcon(): string {
+        return this.props.displayIcon
     }
 }

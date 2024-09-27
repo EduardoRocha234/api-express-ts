@@ -16,7 +16,9 @@ export class SportRepositoryPrisma implements SportGateway {
 
         const aSport = Sport.with({
             id: sportCreated.id,
-            name: sportCreated.name
+            name: sportCreated.name,
+            displayColor: sportCreated.displayColor,
+            displayIcon: sportCreated.displayIcon
         })
 
         return aSport
@@ -28,7 +30,9 @@ export class SportRepositoryPrisma implements SportGateway {
         const sportsList = sports.map((sport) => {
             const sportWith = Sport.with({
                 id: sport.id,
-                name: sport.name
+                name: sport.name,
+                displayColor: sport.displayColor,
+                displayIcon: sport.displayIcon
             })
 
             return sportWith
@@ -48,7 +52,9 @@ export class SportRepositoryPrisma implements SportGateway {
 
         const aSport = Sport.with({
             id: sport.id,
-            name: sport.name
+            name: sport.name,
+            displayColor: sport.displayColor,
+            displayIcon: sport.displayIcon
         })
 
         return aSport
@@ -64,7 +70,9 @@ export class SportRepositoryPrisma implements SportGateway {
 
         const aSport = Sport.with({
             id: getSport!.id,
-            name: getSport!.name
+            name: getSport!.name,
+            displayColor: getSport!.displayColor,
+            displayIcon: getSport!.displayIcon
         })
 
         return aSport

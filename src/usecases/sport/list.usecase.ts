@@ -1,9 +1,9 @@
 import type { Usecase } from '../usecase'
-import type { Sport } from '@domain/sport/entity/sport.entity'
+import type { Sport, SportProps } from '@domain/sport/entity/sport.entity'
 import type { SportGateway } from '@domain/sport/gateway/sport.gateway'
 
 export type ListSportsOutputDto = {
-    sports: { id: number; name: string }[]
+    sports: SportProps[]
 }
 
 export class ListSportsUseCase implements Usecase<void, ListSportsOutputDto> {
@@ -25,7 +25,9 @@ export class ListSportsUseCase implements Usecase<void, ListSportsOutputDto> {
         return {
             sports: sport.map((sport) => ({
                 id: sport.id,
-                name: sport.name
+                name: sport.name,
+                displayColor: sport.displayColor,
+                displayIcon: sport.displayIcon
             }))
         }
     }

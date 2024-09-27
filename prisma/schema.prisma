@@ -28,6 +28,8 @@ model User {
 model Sport {
   id              Int @id @default(autoincrement())
   name            String
+  displayColor    String
+  displayIcon     String
   
   events          Event[]
 

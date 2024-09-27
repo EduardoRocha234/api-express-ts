@@ -1,28 +1,31 @@
 import type { Usecase } from '../usecase'
 import type { Participant } from '@domain/participants/entity/participants.entity'
-import type { EventGateway } from '@domain/event/gateway/event.gateway'
+import type { EventGateway, ListEventInput } from '@domain/event/gateway/event.gateway'
 import type { Event, EventProps } from '@domain/event/entity/event.entity'
-import type { PaginationInput, PaginationOutput } from '@domain/shared/pagination.interface'
+import type { PaginationOutput } from '@domain/shared/pagination.interface'
 
 export type ListEventsOutputDto = {
     events: EventProps[]
     metadata: PaginationOutput
 }
 
-export interface ListEventInputDto extends PaginationInput {}
-
-export class ListEventUseCase implements Usecase<ListEventInputDto, ListEventsOutputDto> {
+export class ListEventUseCase implements Usecase<ListEventInput, ListEventsOutputDto> {
     private constructor(private readonly eventGateway: EventGateway) {}
 
     public static create(eventGateway: EventGateway) {
         return new ListEventUseCase(eventGateway)
     }
 
-    public async execute({ page, pageSize }: ListEventInputDto): Promise<ListEventsOutputDto> {
+    public async execute({
+        page,
+        pageSize,
+        sportId
+    }: ListEventInput): Promise<ListEventsOutputDto> {
         console.log('teste', page, pageSize)
         const { events, metadata } = await this.eventGateway.list({
-            page: page,
-            pageSize: pageSize
+            page,
+            pageSize,
+            sportId
         })
 
         const output = this.presentOutput(events)

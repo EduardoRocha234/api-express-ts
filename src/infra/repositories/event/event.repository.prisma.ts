@@ -1,11 +1,14 @@
 import { PrismaClient } from '@prisma/client'
-import type { EventGateway, ListEventOutput } from '@domain/event/gateway/event.gateway'
+import type {
+    EventGateway,
+    ListEventInput,
+    ListEventOutput
+} from '@domain/event/gateway/event.gateway'
 import { EdaysOfWeek, Event } from '@domain/event/entity/event.entity'
 import {
     Participant,
     type ParticipantStatus
 } from '@domain/participants/entity/participants.entity'
-import type { PaginationInput } from '@domain/shared/pagination.interface'
 
 export class EventRepositoryPrisma implements EventGateway {
     private constructor(private readonly prismaClient: PrismaClient) {}
@@ -90,7 +93,7 @@ export class EventRepositoryPrisma implements EventGateway {
         })
     }
 
-    public async list({ page, pageSize }: PaginationInput): Promise<ListEventOutput> {
+    public async list({ page, pageSize, sportId }: ListEventInput): Promise<ListEventOutput> {
         console.log(page, pageSize)
         const skip = (page - 1) * pageSize
         const take = pageSize
@@ -100,6 +103,9 @@ export class EventRepositoryPrisma implements EventGateway {
         const events = await this.prismaClient.event.findMany({
             skip,
             take,
+            where: {
+                sportId: sportId
+            },
             include: {
                 participants: true
             }

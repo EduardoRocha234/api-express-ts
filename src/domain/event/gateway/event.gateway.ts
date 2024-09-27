@@ -6,9 +6,13 @@ export interface ListEventOutput {
     metadata: PaginationOutput
 }
 
+export interface ListEventInput extends PaginationInput {
+    sportId?: number
+}
+
 export interface EventGateway {
     save(event: Event): Promise<Event>
-    list(props: PaginationInput): Promise<ListEventOutput>
+    list(props: ListEventInput): Promise<ListEventOutput>
     findById(id: number): Promise<Event | undefined>
     delete(id: number): Promise<void>
     update(event: Event): Promise<Event>

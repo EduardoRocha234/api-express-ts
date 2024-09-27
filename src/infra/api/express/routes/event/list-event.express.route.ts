@@ -24,12 +24,13 @@ export class ListEventRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const { page, pageSize } = request.query
+            const { page, pageSize, sportId } = request.query
 
             try {
                 const output = await this.listEventService.execute({
                     page: Number(page) || 1,
-                    pageSize: Number(pageSize) || 10
+                    pageSize: Number(pageSize) || 10,
+                    sportId: sportId ? Number(sportId) : undefined
                 })
 
                 const responseBody = this.present(output)
