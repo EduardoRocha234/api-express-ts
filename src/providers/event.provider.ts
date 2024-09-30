@@ -46,6 +46,7 @@ export default function useEventProvider(prismaClient: PrismaClient, socketIo: S
         findEventByIdUseCase,
         findParticipantsOfEventUseCase,
         insertParticipantUseCase,
+        findParticipantByIdUseCase,
         socketIo,
         [authMiddleware]
     )

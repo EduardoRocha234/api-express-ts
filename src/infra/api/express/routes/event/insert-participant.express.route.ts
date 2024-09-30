@@ -8,6 +8,7 @@ import type { FindEventByIdUsecase } from '@usecases/event/find-by-id.usecase'
 import { ParticipantStatusEnum } from '@domain/participants/entity/participants.entity'
 import type { Server as SocketIOServer } from 'socket.io'
 import type { FindParticipantsByEventIdUsecase } from '@usecases/participant/find-by-eventid.usecase'
+import type { FindParticipantByIdUseCase } from '@usecases/participant/find-by-id.usecase'
 
 export class InsertParticipantInEventRoute implements Route {
     private constructor(
@@ -16,6 +17,7 @@ export class InsertParticipantInEventRoute implements Route {
         private readonly eventService: FindEventByIdUsecase,
         private readonly getParticipants: FindParticipantsByEventIdUsecase,
         private readonly insertParticipantService: InserParticipantUsecase,
+        private readonly findParticipantService: FindParticipantByIdUseCase,
         private readonly io: SocketIOServer,
         private readonly middlewares: Middlewares
     ) {}
@@ -24,6 +26,7 @@ export class InsertParticipantInEventRoute implements Route {
         eventService: FindEventByIdUsecase,
         getParticipants: FindParticipantsByEventIdUsecase,
         insertParticipantService: InserParticipantUsecase,
+        findParticipantService: FindParticipantByIdUseCase,
         io: SocketIOServer,
         middlewares: Middlewares
     ) {
@@ -33,6 +36,7 @@ export class InsertParticipantInEventRoute implements Route {
             eventService,
             getParticipants,
             insertParticipantService,
+            findParticipantService,
             io,
             middlewares
         )
@@ -80,9 +84,14 @@ export class InsertParticipantInEventRoute implements Route {
 
                 await this.insertParticipantService.execute(input)
 
+                const findParticipant = await this.findParticipantService.execute({
+                    eventId,
+                    userId
+                })
+
                 this.io.emit('insertParticipant', {
                     eventId: input.eventId,
-                    particopant: input,
+                    participant: findParticipant,
                     status: input.status
                 })
 

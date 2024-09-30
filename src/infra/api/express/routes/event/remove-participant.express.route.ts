@@ -76,9 +76,6 @@ export class RemoveParticipantRoute implements Route {
                         status: ParticipantStatusEnum.WATING_LIST
                     })
 
-                    console.log('teste')
-                    console.log(participantsWaitingList)
-
                     if (participantsWaitingList.length > 0) {
                         const firstParticipantWatingList = participantsWaitingList[0]
 
@@ -91,7 +88,12 @@ export class RemoveParticipantRoute implements Route {
 
                 await this.deleteParticipantService.execute(findParticipant.id)
 
-                this.io.emit('removeParticipant')
+                console.log('removendo')
+
+                this.io.emit('removeParticipant', {
+                    eventId: findEvent.id,
+                    participant: findParticipant
+                })
 
                 response
                     .status(200)
