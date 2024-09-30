@@ -35,7 +35,6 @@ export class AutoCreateEventUsecase implements Usecase<void, void> {
         const dayName = EdaysOfWeek[weekDay] as keyof typeof EdaysOfWeek
 
         const eventsToRepeat = await this.eventGateway.findRecurringEventsByDay(dayName)
-        console.log(eventsToRepeat)
         const map = this.mapEvents(eventsToRepeat)
 
         await this.eventGateway.saveMany(map)
@@ -59,7 +58,8 @@ export class AutoCreateEventUsecase implements Usecase<void, void> {
                 updateOpenParticipanrsLisKeepTime,
                 event.maxOfParticipantsWaitingList,
                 event.adminId,
-                null
+                null,
+                event.description
             )
 
             return aEvent

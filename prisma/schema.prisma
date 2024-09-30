@@ -52,6 +52,7 @@ model Event {
   user                            User @relation(fields: [adminId], references: [id])
   adminId                         String
   recurringDay                    String?
+  description                     String?
 
   participants    Participant[]
 

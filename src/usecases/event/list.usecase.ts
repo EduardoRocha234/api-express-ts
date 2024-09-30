@@ -21,7 +21,6 @@ export class ListEventUseCase implements Usecase<ListEventInput, ListEventsOutpu
         pageSize,
         sportId
     }: ListEventInput): Promise<ListEventsOutputDto> {
-        console.log('teste', page, pageSize)
         const { events, metadata } = await this.eventGateway.list({
             page,
             pageSize,
@@ -50,6 +49,7 @@ export class ListEventUseCase implements Usecase<ListEventInput, ListEventsOutpu
             adminId: event.adminId,
             maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
             openParticipantsListDate: event.openParticipantsListDate,
+            description: event.description,
             participants: event.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,

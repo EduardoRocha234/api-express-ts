@@ -24,6 +24,7 @@ export type EventProps = {
     maxOfParticipantsWaitingList: number
     adminId: string
     recurringDay: keyof typeof EdaysOfWeek | null
+    description: string | null
     participants: Participant[]
 }
 
@@ -45,6 +46,7 @@ export class Event {
         maxOfParticipantsWaitingList: number,
         adminId: string,
         recurringDay: keyof typeof EdaysOfWeek | null,
+        description: string | null,
         participants?: Participant[]
     ): Event {
         return new Event({
@@ -61,6 +63,7 @@ export class Event {
             maxOfParticipantsWaitingList,
             adminId,
             recurringDay,
+            description,
             participants: participants || []
         })
     }
@@ -129,5 +132,9 @@ export class Event {
 
     public get recurringDay(): keyof typeof EdaysOfWeek | null {
         return this.props.recurringDay
+    }
+
+    public get description(): string | null{
+        return this.props.description
     }
 }

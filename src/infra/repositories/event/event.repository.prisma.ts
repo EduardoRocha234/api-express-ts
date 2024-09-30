@@ -30,7 +30,8 @@ export class EventRepositoryPrisma implements EventGateway {
             adminId,
             openParticipantsListDate,
             recurringDay,
-            maxOfParticipantsWaitingList
+            maxOfParticipantsWaitingList,
+            description
         } = event
 
         const data = {
@@ -45,7 +46,8 @@ export class EventRepositoryPrisma implements EventGateway {
             adminId,
             maxOfParticipantsWaitingList,
             recurringDay,
-            openParticipantsListDate
+            openParticipantsListDate,
+            description 
         }
 
         const eventCreated = await this.prismaClient.event.create({
@@ -66,6 +68,7 @@ export class EventRepositoryPrisma implements EventGateway {
             recurringDay: eventCreated.recurringDay as keyof typeof EdaysOfWeek | null,
             maxOfParticipantsWaitingList: eventCreated.maxOfParticipantsWaitingList,
             openParticipantsListDate: eventCreated.openParticipantsListDate,
+            description: eventCreated.description,
             participants: []
         })
 
@@ -94,11 +97,8 @@ export class EventRepositoryPrisma implements EventGateway {
     }
 
     public async list({ page, pageSize, sportId }: ListEventInput): Promise<ListEventOutput> {
-        console.log(page, pageSize)
         const skip = (page - 1) * pageSize
         const take = pageSize
-
-        console.log(skip, take)
 
         const events = await this.prismaClient.event.findMany({
             skip,
@@ -126,6 +126,7 @@ export class EventRepositoryPrisma implements EventGateway {
                 adminId: event.adminId,
                 recurringDay: event.recurringDay as keyof typeof EdaysOfWeek | null,
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
+                description: event.description,
                 participants: event.participants.map((participant) => {
                     return Participant.with({
                         eventId: participant.eventId,
@@ -185,6 +186,7 @@ export class EventRepositoryPrisma implements EventGateway {
                 adminId: event.adminId,
                 recurringDay: event.recurringDay as keyof typeof EdaysOfWeek | null,
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
+                description: event.description,
                 participants: []
             })
 
@@ -224,6 +226,7 @@ export class EventRepositoryPrisma implements EventGateway {
             adminId: event.adminId,
             maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
             openParticipantsListDate: event.openParticipantsListDate,
+            description: event.description,
             participants: event.participants.map((participant) => {
                 return Participant.with({
                     eventId: participant.eventId,
@@ -252,7 +255,8 @@ export class EventRepositoryPrisma implements EventGateway {
             endTime,
             openParticipantsListDate,
             maxOfParticipantsWaitingList,
-            startTime
+            startTime,
+            description
         } = event
 
         const data = {
@@ -266,7 +270,8 @@ export class EventRepositoryPrisma implements EventGateway {
             endTime,
             maxOfParticipantsWaitingList,
             openParticipantsListDate,
-            startTime
+            startTime,
+            description
         }
 
         const newEventUpdated = await this.prismaClient.event.update({
@@ -290,6 +295,7 @@ export class EventRepositoryPrisma implements EventGateway {
             adminId: getEvent!.adminId,
             recurringDay: getEvent!.recurringDay as keyof typeof EdaysOfWeek | null,
             maxOfParticipantsWaitingList: getEvent!.maxOfParticipantsWaitingList,
+            description: getEvent!.description,
             participants: getEvent!.participants
         })
 

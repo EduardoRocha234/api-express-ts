@@ -78,6 +78,7 @@ export class FindEventByIdRoute implements Route {
             maxOfParticipantsWaitingList: input!.maxOfParticipantsWaitingList,
             openParticipantsListDate: input!.openParticipantsListDate,
             recurringDay: input!.recurringDay,
+            description: input!.description,
             participants: input!.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,
