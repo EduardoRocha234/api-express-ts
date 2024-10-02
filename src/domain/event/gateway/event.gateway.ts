@@ -8,6 +8,9 @@ export interface ListEventOutput {
 
 export interface ListEventInput extends PaginationInput {
     sportId?: number
+    initialPeriod?: Date
+    finalPeriod?: Date
+    locale?: string
 }
 
 export interface EventGateway {

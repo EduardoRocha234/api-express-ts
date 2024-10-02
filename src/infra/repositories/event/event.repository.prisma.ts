@@ -47,7 +47,7 @@ export class EventRepositoryPrisma implements EventGateway {
             maxOfParticipantsWaitingList,
             recurringDay,
             openParticipantsListDate,
-            description 
+            description
         }
 
         const eventCreated = await this.prismaClient.event.create({
@@ -96,7 +96,14 @@ export class EventRepositoryPrisma implements EventGateway {
         })
     }
 
-    public async list({ page, pageSize, sportId }: ListEventInput): Promise<ListEventOutput> {
+    public async list({
+        page,
+        pageSize,
+        sportId,
+        initialPeriod,
+        finalPeriod,
+        locale
+    }: ListEventInput): Promise<ListEventOutput> {
         const skip = (page - 1) * pageSize
         const take = pageSize
 
@@ -104,7 +111,14 @@ export class EventRepositoryPrisma implements EventGateway {
             skip,
             take,
             where: {
-                sportId: sportId
+                sportId: sportId,
+                datetime: {
+                    gte: initialPeriod, // Maior ou igual à data de início
+                    lte: finalPeriod // Menor ou igual à data de término
+                },
+                location: {
+                    contains: locale
+                }
             },
             include: {
                 participants: true

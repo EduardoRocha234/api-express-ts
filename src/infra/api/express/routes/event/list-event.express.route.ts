@@ -4,9 +4,10 @@ import type { Participant } from '@domain/participants/entity/participants.entit
 import type { ListEventsOutputDto, ListEventUseCase } from '@usecases/event/list.usecase'
 import type { EventProps } from '@domain/event/entity/event.entity'
 import type { PaginationOutput } from '@domain/shared/pagination.interface'
+import type { ListEventInput } from '@domain/event/gateway/event.gateway'
 
 export type ListEventResponseDto = {
-    events: EventProps[]
+    events: Omit<EventProps, 'description'>[]
     metadata: PaginationOutput
 }
 
@@ -24,13 +25,17 @@ export class ListEventRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const { page, pageSize, sportId } = request.query
+            const { page, pageSize, sportId, initialPeriod, finalPeriod, locale } =
+                request.query as unknown as ListEventInput
 
             try {
                 const output = await this.listEventService.execute({
                     page: Number(page) || 1,
                     pageSize: Number(pageSize) || 10,
-                    sportId: sportId ? Number(sportId) : undefined
+                    sportId: sportId ? Number(sportId) : undefined,
+                    initialPeriod: initialPeriod ? new Date(initialPeriod) : undefined,
+                    finalPeriod: finalPeriod ? new Date(finalPeriod) : undefined,
+                    locale
                 })
 
                 const responseBody = this.present(output)

@@ -19,12 +19,18 @@ export class ListEventUseCase implements Usecase<ListEventInput, ListEventsOutpu
     public async execute({
         page,
         pageSize,
-        sportId
+        sportId,
+        initialPeriod,
+        finalPeriod,
+        locale
     }: ListEventInput): Promise<ListEventsOutputDto> {
         const { events, metadata } = await this.eventGateway.list({
             page,
             pageSize,
-            sportId
+            sportId,
+            initialPeriod,
+            finalPeriod,
+            locale
         })
 
         const output = this.presentOutput(events)
