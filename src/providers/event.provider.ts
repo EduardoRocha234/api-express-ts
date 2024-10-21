@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@prisma/client'
-import { JwtAdapter } from '@infra/driven-adapter/jwt-adapter'
+import type { JwtAdapter } from '@infra/driven-adapter/jwt-adapter'
+import type { Server as SocketIOServer } from 'socket.io'
 import { AuthMiddleware } from '@infra/api/express/middlewares/auth.middleware'
 import { EventRepositoryPrisma } from '@infra/repositories/event/event.repository.prisma'
 import { CreateEventUsecase } from '@usecases/event/create.usecase'
@@ -17,11 +18,18 @@ import { DeleteParticipantUseCase } from '@usecases/participant/delete.usecase'
 import { FindParticipantByIdUseCase } from '@usecases/participant/find-by-id.usecase'
 import { ChangeStatusOfParticipantUseCase } from '@usecases/participant/change-status.usecase'
 import { FindParticipantsByEventIdUsecase } from '@usecases/participant/find-by-eventid.usecase'
-import type { Server as SocketIOServer } from 'socket.io'
-import { AutoCreateEventUsecase } from '@usecases/event/auto-create.usecase'
+import { ListUserParticipantsEventsUseCase } from '@usecases/event/find-user-participanting-events'
+import { ListUserParticipantsEventsRoute } from '@infra/api/express/routes/event/find-user-participanting-events.route'
+import { CreateEventsCronJob } from '../infra/crons/CreateEventCronJob.job'
+import { EventProducer } from '@infra/rabbitmq/producers/event.producer'
+import type { RabbitMQClient } from '@infra/rabbitmq/rabbitmq-client'
 
-export default function useEventProvider(prismaClient: PrismaClient, socketIo: SocketIOServer) {
-    const jwtAdapter = new JwtAdapter()
+export default function useEventProvider(
+    prismaClient: PrismaClient,
+    socketIo: SocketIOServer,
+    jwtAdapter: JwtAdapter,
+    rabbitMQClient: RabbitMQClient
+) {
     const authMiddleware = AuthMiddleware.create(jwtAdapter)
 
     const aRepository = EventRepositoryPrisma.create(prismaClient)
@@ -30,8 +38,8 @@ export default function useEventProvider(prismaClient: PrismaClient, socketIo: S
     const createEventUseCase = CreateEventUsecase.create(aRepository)
     const findEventByIdUseCase = FindEventByIdUsecase.create(aRepository)
     const getAllEventsUseCase = ListEventUseCase.create(aRepository)
+    const listUserParticipantsEventsUseCase = ListUserParticipantsEventsUseCase.create(aRepository)
 
-    const autoCreateEventUseCase = AutoCreateEventUsecase.create(aRepository)
     const insertParticipantUseCase = InserParticipantUsecase.create(participantRepository)
     const findParticipantsOfEventUseCase =
         FindParticipantsByEventIdUsecase.create(participantRepository)
@@ -62,13 +70,22 @@ export default function useEventProvider(prismaClient: PrismaClient, socketIo: S
     const createEventRoute = CreateEventRoute.create(createEventUseCase, [authMiddleware])
     const findEventByIdRoute = FindEventByIdRoute.create(findEventByIdUseCase, [authMiddleware])
     const getAllEventsRoute = ListEventRoute.create(getAllEventsUseCase, [authMiddleware])
+    const listUserParticipantsEventsRoute = ListUserParticipantsEventsRoute.create(
+        listUserParticipantsEventsUseCase,
+        [authMiddleware]
+    )
 
-    autoCreateEventUseCase.execute()
+    const eventProducer = EventProducer.create(rabbitMQClient)
+    const createEventsJob = CreateEventsCronJob.create(aRepository, eventProducer)
+
+    createEventsJob.execute()
+
     return [
         createEventRoute,
         findEventByIdRoute,
         getAllEventsRoute,
         insertParticipantRoute,
-        removeParticipantRoute
+        removeParticipantRoute,
+        listUserParticipantsEventsRoute
     ]
 }

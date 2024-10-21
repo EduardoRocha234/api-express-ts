@@ -2,20 +2,27 @@
   "name": "api-express-ts",
   "module": "index.ts",
   "scripts": {
+    "build": "tsc --build",
     "start": "bun run src/main.ts",
     "dev": "bun run src/main.ts --watch",
     "lint": "eslint ./src --fix",
     "prisma:studio": "bunx prisma studio",
     "prisma:generate": "bunx prisma generate",
     "prisma:migrate": "bunx prisma migrate dev --name init",
-    "prepare": "husky"
+    "prepare": "husky",
+    "pm2:start": "pm2 start ./pm2.config.json",
+    "pm2:stop": "pm2 delete ./pm2.config.json"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
+    "@types/amqplib": "^0.10.5",
+    "amqplib": "^0.10.4",
     "bcrypt": "^5.1.1",
+    "dayjs": "^1.11.13",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",
+    "pm2": "^5.4.2",
     "prisma": "^5.14.0",
     "socket.io": "^4.7.5"
   },

@@ -9,14 +9,14 @@ import { FindUserByIdUsecase } from '@usecases/user/find-by-id.usecase'
 import { FindUserByIdRoute } from '@infra/api/express/routes/user/find-by-id.express.route'
 import { LoginRoute } from '@infra/api/express/routes/user/login.express.route'
 import { FindUserByEmailUsecase } from '@usecases/user/find-by-email.usecase'
-import { JwtAdapter } from '@infra/driven-adapter/jwt-adapter'
+import type { JwtAdapter } from '@infra/driven-adapter/jwt-adapter'
 import { DeleteUserUsecase } from '@usecases/user/delete.usecase'
 import { DeleteUserRoute } from '@infra/api/express/routes/user/delete.express.route'
 import { AuthMiddleware } from '@infra/api/express/middlewares/auth.middleware'
 
-export default function useUserProvider(prismaClient: PrismaClient) {
+export default function useUserProvider(prismaClient: PrismaClient, jwtAdapter: JwtAdapter) {
     const bcryptAdapter = new BcryptAdapter()
-    const jwtAdapter = new JwtAdapter()
+    // const jwtAdapter = new JwtAdapter()
     const authMiddleware = AuthMiddleware.create(jwtAdapter)
 
     const aRepository = UserRepositoryPrisma.create(prismaClient)

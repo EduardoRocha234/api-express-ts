@@ -1,0 +1,20 @@
+{
+    "apps": [
+        {
+            "name": "API",
+            "script": "./dist/main.js",
+            "watch": false,
+            "instances": 1,
+            "interpreter": "bun",
+            "out_file": "./logs/API_OUt_LOG.log",
+            "error_file": "./logs/API_ERROR_LOG.log"
+        },
+        {
+            "name": "CONSUMERS",
+            "script": "./dist/infra/rabbitmq/consumers/index.js",
+            "watch": false,
+            "interpreter": "bun",
+            "instances": 2
+        }
+    ]
+}
