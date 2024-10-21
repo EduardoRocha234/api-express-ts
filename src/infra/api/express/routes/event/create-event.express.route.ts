@@ -31,7 +31,8 @@ export class CreateEventRoute implements Route {
                 maxOfParticipantsWaitingList,
                 openParticipantsListDate,
                 recurringDay,
-                description
+                description,
+                daysBeforeOpeningList
             } = request.body as CreateEventInputDto
 
             if (
@@ -66,7 +67,8 @@ export class CreateEventRoute implements Route {
                     maxOfParticipantsWaitingList,
                     openParticipantsListDate,
                     recurringDay,
-                    description
+                    description,
+                    daysBeforeOpeningList
                 }
 
                 const output: CreateEventResponseDto = await this.createEventService.execute(input)
@@ -113,7 +115,8 @@ export class CreateEventRoute implements Route {
             maxOfParticipantsWaitingList: input.maxOfParticipantsWaitingList,
             openParticipantsListDate: input.openParticipantsListDate,
             adminId: input.adminId,
-            description: input.description
+            description: input.description,
+            daysBeforeOpeningList: input.daysBeforeOpeningList
         }
 
         return response

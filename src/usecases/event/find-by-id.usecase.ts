@@ -40,6 +40,7 @@ export class FindEventByIdUsecase implements Usecase<FindEventInputDto, FindEven
             openParticipantsListDate: input.openParticipantsListDate,
             adminId: input.adminId,
             description: input.description,
+            daysBeforeOpeningList: input.daysBeforeOpeningList
         } as EventProps
     }
 }

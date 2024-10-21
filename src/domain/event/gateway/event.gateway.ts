@@ -11,6 +11,11 @@ export interface ListEventInput extends PaginationInput {
     initialPeriod?: Date
     finalPeriod?: Date
     locale?: string
+    name?: string
+}
+
+export interface ListEventsFindByUserParticipantingInputDto {
+    userId: string
 }
 
 export interface EventGateway {
@@ -21,4 +26,5 @@ export interface EventGateway {
     update(event: Event): Promise<Event>
     findRecurringEventsByDay(day: keyof typeof EdaysOfWeek): Promise<Event[]>
     saveMany(events: Event[]): Promise<void>
+    findUserParticipatingEvents(props: ListEventsFindByUserParticipantingInputDto): Promise<Event[]>
 }

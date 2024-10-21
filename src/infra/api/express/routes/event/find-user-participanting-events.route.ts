@@ -1,43 +1,42 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
-import type { Participant } from '@domain/participants/entity/participants.entity'
-import type { ListEventsOutputDto, ListEventUseCase } from '@usecases/event/list.usecase'
+import { Participant } from '@domain/participants/entity/participants.entity'
 import type { EventProps } from '@domain/event/entity/event.entity'
-import type { PaginationOutput } from '@domain/shared/pagination.interface'
-import type { ListEventInput } from '@domain/event/gateway/event.gateway'
+import type {
+    ListEventByUserParticipantingsOutputDto,
+    ListUserParticipantsEventsUseCase
+} from '@usecases/event/find-user-participanting-events'
 
-export type ListEventResponseDto = {
+export type ListUserParticipantsEventsResponseDto = {
     events: Omit<EventProps, 'description'>[]
-    metadata: PaginationOutput
 }
 
-export class ListEventRoute implements Route {
+export class ListUserParticipantsEventsRoute implements Route {
     private constructor(
         private readonly path: string,
         private readonly method: HttpMethod,
-        private readonly listEventService: ListEventUseCase,
+        private readonly findEventByUserParticipantingService: ListUserParticipantsEventsUseCase,
         private readonly middlewares: Middlewares
     ) {}
 
-    public static create(listEventService: ListEventUseCase, middlewares: Middlewares) {
-        return new ListEventRoute('/event', HttpMethod.GET, listEventService, middlewares)
+    public static create(
+        findEventByUserParticipantingService: ListUserParticipantsEventsUseCase,
+        middlewares: Middlewares
+    ) {
+        return new ListUserParticipantsEventsRoute(
+            '/events-by-user/:userId',
+            HttpMethod.GET,
+            findEventByUserParticipantingService,
+            middlewares
+        )
     }
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const { page, pageSize, sportId, initialPeriod, finalPeriod, locale, name } =
-                request.query as unknown as ListEventInput
+            const userId = String(request.params['userId'])
 
             try {
-                const output = await this.listEventService.execute({
-                    page: Number(page) || 1,
-                    pageSize: Number(pageSize) || 10,
-                    sportId: sportId ? Number(sportId) : undefined,
-                    initialPeriod: initialPeriod ? new Date(initialPeriod) : undefined,
-                    finalPeriod: finalPeriod ? new Date(finalPeriod) : undefined,
-                    locale: locale?.toLocaleLowerCase(),
-                    name: name?.toLocaleLowerCase()
-                })
+                const output = await this.findEventByUserParticipantingService.execute({ userId })
 
                 const responseBody = this.present(output)
 
@@ -47,7 +46,7 @@ export class ListEventRoute implements Route {
                 response
                     .status(500)
                     .json({
-                        message: 'Ocorreu um erro interno: ' + error
+                        message: 'Ocorreu um erro interno  ' + error
                     })
                     .send()
                 return
@@ -67,8 +66,10 @@ export class ListEventRoute implements Route {
         return this.middlewares
     }
 
-    private present(input: ListEventsOutputDto): ListEventResponseDto {
-        const response: ListEventResponseDto = {
+    private present(
+        input: ListEventByUserParticipantingsOutputDto
+    ): ListUserParticipantsEventsResponseDto {
+        const response: ListUserParticipantsEventsResponseDto = {
             events: input.events.map((event) => ({
                 id: event.id,
                 name: event.name,
@@ -91,8 +92,7 @@ export class ListEventRoute implements Route {
                     status: participant.status,
                     createdAt: participant.createdAt
                 })) as Participant[]
-            })),
-            metadata: input.metadata
+            }))
         }
 
         return response

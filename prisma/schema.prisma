@@ -53,6 +53,7 @@ model Event {
   adminId                         String
   recurringDay                    String?
   description                     String?
+  daysBeforeOpeningList           Int?
 
   participants    Participant[]
 
