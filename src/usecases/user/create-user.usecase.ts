@@ -31,7 +31,7 @@ export class CreateUserUsecase implements Usecase<CreateUserInputDto, CreateUser
         password
     }: CreateUserInputDto): Promise<CreateUserOutputDto> {
         const passwordHashed = await this.bcryptAdapter.hash(password)
-        const aUser = User.create(name, email, passwordHashed)
+        const aUser = User.create(name, email, passwordHashed, null)
 
         await this.userGateway.save(aUser)
 

@@ -23,6 +23,17 @@ export class UserRepositoryPrisma implements UserGateway {
         })
     }
 
+    public async savePushToken(userId: string, token: string): Promise<void> {
+        await this.prismaClient.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                pushToken: token
+            }
+        })
+    }
+
     public async list(): Promise<User[]> {
         const users = await this.prismaClient.user.findMany()
 
@@ -53,7 +64,8 @@ export class UserRepositoryPrisma implements UserGateway {
             id: user.id,
             email: user.email,
             name: user.name,
-            password: user.password
+            password: user.password,
+            pushToken: user.pushToken
         })
 
         return aUser
@@ -79,12 +91,13 @@ export class UserRepositoryPrisma implements UserGateway {
     }
 
     public async update(user: User): Promise<User> {
-        const { id, name, email, password } = user
+        const { id, name, email, password, pushToken } = user
         const data = {
             id,
             name,
             email,
-            password
+            password,
+            pushToken
         }
 
         const newUser = await this.prismaClient.user.update({
@@ -98,7 +111,8 @@ export class UserRepositoryPrisma implements UserGateway {
             id: newUser.id,
             email: newUser.email,
             name: newUser.name,
-            password: newUser.password
+            password: newUser.password,
+            pushToken: newUser.pushToken
         })
 
         return aUser
@@ -108,7 +122,7 @@ export class UserRepositoryPrisma implements UserGateway {
         await this.prismaClient.user.delete({
             where: {
                 id
-            }
+            },
         })
     }
 }

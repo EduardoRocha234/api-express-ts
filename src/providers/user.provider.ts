@@ -13,6 +13,8 @@ import type { JwtAdapter } from '@infra/driven-adapter/jwt-adapter'
 import { DeleteUserUsecase } from '@usecases/user/delete.usecase'
 import { DeleteUserRoute } from '@infra/api/express/routes/user/delete.express.route'
 import { AuthMiddleware } from '@infra/api/express/middlewares/auth.middleware'
+import { SaveUserPushTokenUseCase } from '@usecases/user/save-push-token.usecase'
+import { SaveUserPushToken } from '@infra/api/express/routes/notifications/save-token.express.route'
 
 export default function useUserProvider(prismaClient: PrismaClient, jwtAdapter: JwtAdapter) {
     const bcryptAdapter = new BcryptAdapter()
@@ -26,6 +28,7 @@ export default function useUserProvider(prismaClient: PrismaClient, jwtAdapter: 
     const findUserByIdUseCase = FindUserByIdUsecase.create(aRepository)
     const findUserByEmailUseCase = FindUserByEmailUsecase.create(aRepository)
     const deleteUserUseCase = DeleteUserUsecase.create(aRepository)
+    const savePushTokenUseCase = SaveUserPushTokenUseCase.create(aRepository)
 
     const createUserRoute = CreateUserRoute.create(createUserUseCase, findUserByEmailUseCase)
     const listUserRoute = ListUserRoute.create(listUserUseCase, [authMiddleware])
@@ -34,6 +37,14 @@ export default function useUserProvider(prismaClient: PrismaClient, jwtAdapter: 
         authMiddleware
     ])
     const loginUserRoute = LoginRoute.create(findUserByEmailUseCase, jwtAdapter, bcryptAdapter)
+    const savePushToken = SaveUserPushToken.create(savePushTokenUseCase, [authMiddleware])
 
-    return [loginUserRoute, createUserRoute, listUserRoute, findUserByIdRoute, deleteUserRoute]
+    return [
+        loginUserRoute,
+        createUserRoute,
+        listUserRoute,
+        findUserByIdRoute,
+        deleteUserRoute,
+        savePushToken
+    ]
 }

@@ -1,15 +1,10 @@
-import type { User } from '@domain/user/entity/user'
+import type { User, UserProps } from '@domain/user/entity/user'
 import type { UserGateway } from '@domain/user/gateway/user.gateway'
 import type { Usecase } from '../usecase'
 
 export type FindUserInputDto = string
 
-export type FindUserOutputDto = {
-    id: string
-    name: string
-    email: string
-    password: string
-} | undefined
+export type FindUserOutputDto = UserProps | undefined
 
 export class FindUserByIdUsecase implements Usecase<FindUserInputDto, FindUserOutputDto> {
     private constructor(private readonly userGateway: UserGateway) {}
@@ -33,7 +28,8 @@ export class FindUserByIdUsecase implements Usecase<FindUserInputDto, FindUserOu
             id: user.id,
             name: user.name,
             email: user.email,
-            password: user.password
+            password: user.password,
+            pushToken: user?.pushToken
         }
     }
 }

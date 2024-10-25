@@ -7,4 +7,5 @@ export interface UserGateway {
     findByEmail(id: string): Promise<User | undefined>
     delete(id: string): Promise<void>
     update(user: User): Promise<User>
+    savePushToken(userId: string, token: string): Promise<void>
 }
