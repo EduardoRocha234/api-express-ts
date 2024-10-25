@@ -3,7 +3,7 @@
   "module": "index.ts",
   "scripts": {
     "build": "tsc --build",
-    "start": "bun run ./dist/main.js",
+    "start": "bun run dist/main.js",
     "dev": "bun run src/main.ts --watch",
     "lint": "eslint ./src --fix",
     "prisma:studio": "bunx prisma studio",
