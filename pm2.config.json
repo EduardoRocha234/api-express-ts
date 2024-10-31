@@ -2,7 +2,7 @@
     "apps": [
         {
             "name": "API",
-            "script": "./dist/main.js",
+            "script": "./dist/main.cjs",
             "watch": false,
             "instances": 1,
             "interpreter": "bun",
@@ -11,7 +11,7 @@
         },
         {
             "name": "CONSUMERS",
-            "script": "./dist/infra/rabbitmq/consumers/index.js",
+            "script": "./dist/infra/rabbitmq/consumers/index.cjs",
             "watch": false,
             "interpreter": "bun",
             "instances": 2

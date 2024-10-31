@@ -269,6 +269,42 @@ export class EventRepositoryPrisma implements EventGateway {
         return aEvent
     }
 
+    public async findByOpenParticipantListDate(initDate: Date, finalDate: Date) {
+        const events = await this.prismaClient.event.findMany({
+            where: {
+                openParticipantsListDate: {
+                    gte: initDate,
+                    lt: finalDate
+                }
+            }
+        })
+
+        const eventsList = events.map((event) => {
+            const eventWith = Event.with({
+                id: event.id,
+                createdAt: event.createdAt,
+                location: event.location,
+                maxParticipants: event.maxParticipants,
+                name: event.name,
+                sportId: event.sportId,
+                datetime: event.datetime,
+                startTime: event.startTime,
+                endTime: event.endTime,
+                openParticipantsListDate: event.openParticipantsListDate,
+                adminId: event.adminId,
+                recurringDay: event.recurringDay as keyof typeof EdaysOfWeek | null,
+                maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
+                description: event.description,
+                daysBeforeOpeningList: event.daysBeforeOpeningList,
+                participants: []
+            })
+
+            return eventWith
+        })
+
+        return eventsList
+    }
+
     public async findUserParticipatingEvents({
         userId
     }: ListEventsFindByUserParticipantingInputDto): Promise<Event[]> {

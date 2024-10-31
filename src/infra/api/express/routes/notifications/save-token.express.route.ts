@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import { HttpMethod, type Middlewares, type Route } from '../routes'
 import type { SaveUserPushTokenUseCase } from '@usecases/user/save-push-token.usecase'
-import { FirebaseAdminService } from '@package/firebase/fire-base-admin'
+// import { FirebaseAdminService } from '@package/firebase/fire-base-admin'
 
 export class SaveUserPushToken implements Route {
     private constructor(
@@ -27,15 +27,15 @@ export class SaveUserPushToken implements Route {
             try {
                 await this.savePushTokenService.execute({ userId, token })
                 // const teste =  FirebaseAdminService.cr
-                const firebaseService = FirebaseAdminService.initFireBaseService()
-                console.log('aqui')
+                // const firebaseService = FirebaseAdminService.initFireBaseService()
+                // console.log('aqui')
 
-                setTimeout(() => {
-                    firebaseService.sendNotification(token, {
-                        title: 'Novo Participante',
-                        body: 'Novo participante na sua lista de espera'
-                    })
-                }, 10000)
+                // setTimeout(() => {
+                //     firebaseService.sendNotification(token, {
+                //         title: 'Novo Participante',
+                //         body: 'Novo participante na sua lista de espera'
+                //     })
+                // }, 10000)
 
                 response.status(200).send('Token saved successfully')
             } catch (error) {

@@ -74,3 +74,12 @@ model Participant {
 
   @@map("participants")
 }
+
+model EventNotificationsUser {
+  id                Int    @id @default(autoincrement())
+  eventId           Int    @unique
+  userId            String
+  userPushToken     String?
+
+  @@map("event_notifications_users")
+}

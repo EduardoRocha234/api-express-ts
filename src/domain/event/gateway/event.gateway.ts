@@ -26,5 +26,6 @@ export interface EventGateway {
     update(event: Event): Promise<Event>
     findRecurringEventsByDay(day: keyof typeof EdaysOfWeek): Promise<Event[]>
     saveMany(events: Event[]): Promise<void>
+    findByOpenParticipantListDate(initDate: Date, finalDate: Date): Promise<Event[]>
     findUserParticipatingEvents(props: ListEventsFindByUserParticipantingInputDto): Promise<Event[]>
 }

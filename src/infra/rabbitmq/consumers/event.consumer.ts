@@ -22,7 +22,7 @@ export class EventConsumer {
         channel.consume('recurring-events-queue', async (msg) => {
             if (msg !== null) {
                 const dayToProcess = msg.content.toString()
-                console.log(`Processando eventos recorrentes para o dia: ${dayToProcess}`)
+                // console.log(`Processando eventos recorrentes para o dia: ${dayToProcess}`)
 
                 // Chama a função para criar os eventos recorrentes
                 await this.createRecurringEventsForDay(dayToProcess)
