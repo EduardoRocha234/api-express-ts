@@ -35,11 +35,21 @@ export class GetUsersWantNotificationsByEventIdAndUserIdRoute implements Route {
     public getHandler() {
         return async (request: Request, response: Response) => {
             const { eventId, userId } =
-                request.body as GetUsersWantsNotificationsByEventAndUserIdInputDto
+                request.query as unknown as GetUsersWantsNotificationsByEventAndUserIdInputDto
+
+            if (!eventId || !userId) {
+                response
+                    .status(404)
+                    .json({
+                        message: 'Usuário não permitiu notificacões para este evento'
+                    })
+                    .send()
+                return
+            }
 
             try {
                 const output = await this.notificationService.execute({
-                    eventId,
+                    eventId: Number(eventId),
                     userId
                 })
 
