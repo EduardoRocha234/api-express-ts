@@ -10,11 +10,10 @@ export class EventNotificationsUsersRepositoryPrisma implements EventNotificatio
     }
 
     public async save(props: EventNotificationsUsers): Promise<void> {
-        const { eventId, id, userId, userPushToken } = props
+        const { eventId, userId, userPushToken } = props
 
         const data = {
             eventId,
-            id,
             userId,
             userPushToken
         }
@@ -43,5 +42,28 @@ export class EventNotificationsUsersRepositoryPrisma implements EventNotificatio
         })
 
         return list
+    }
+
+    public async getByEventIdAndUseId(
+        eventId: number,
+        userId: string
+    ): Promise<EventNotificationsUsers | null> {
+        const res = await this.prismaClient.eventNotificationsUser.findFirst({
+            where: {
+                eventId,
+                userId
+            }
+        })
+
+        if (!res) return null
+
+        const eventWith = EventNotificationsUsers.with({
+            id: res.id,
+            eventId: res.eventId,
+            userId: res.userId,
+            userPushToken: res.userPushToken
+        })
+
+        return eventWith
     }
 }

@@ -77,7 +77,7 @@ model Participant {
 
 model EventNotificationsUser {
   id                Int    @id @default(autoincrement())
-  eventId           Int    @unique
+  eventId           Int   
   userId            String
   userPushToken     String?
 

@@ -31,10 +31,11 @@ export class SaveUserWantsNotificationRoute implements Route {
 
     public getHandler() {
         return async (request: Request, response: Response) => {
-            const body = request.body as SaveUserWantsNotificationInputDto
+            const { eventId, userId } = request.body as SaveUserWantsNotificationInputDto
 
             try {
-                const user = await this.userService.execute(body.userId)
+                console.log(userId)
+                const user = await this.userService.execute(userId)
 
                 if (!user) {
                     response
@@ -57,7 +58,8 @@ export class SaveUserWantsNotificationRoute implements Route {
                 }
 
                 const data: SaveUserWantsNotificationInputDto = {
-                    ...body,
+                    eventId,
+                    userId,
                     userPushToken: user.pushToken as string | null
                 }
 
@@ -71,6 +73,7 @@ export class SaveUserWantsNotificationRoute implements Route {
                     })
                     .send()
             } catch (error) {
+                console.error(error)
                 response
                     .status(500)
                     .json({
