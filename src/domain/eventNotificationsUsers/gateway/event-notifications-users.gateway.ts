@@ -4,4 +4,5 @@ export interface EventNotificationsUsersGateway {
     save(props: EventNotificationsUsers): Promise<void>
     getByEventId(eventId: number): Promise<EventNotificationsUsers[]>
     getByEventIdAndUseId(eventId: number, userId: string): Promise<EventNotificationsUsers | null>
+    delete(eventId: number, userId: string): Promise<void>
 }

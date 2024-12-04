@@ -34,7 +34,6 @@ export class SaveUserWantsNotificationRoute implements Route {
             const { eventId, userId } = request.body as SaveUserWantsNotificationInputDto
 
             try {
-                console.log(userId)
                 const user = await this.userService.execute(userId)
 
                 if (!user) {

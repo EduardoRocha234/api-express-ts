@@ -1,7 +1,7 @@
 import { RabbitMQClient } from '../rabbitmq-client'
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
 import { EdaysOfWeek, Event } from '@domain/event/entity/event.entity'
-import dayjs from 'dayjs'
+import { dayJsTz } from '@package/dayjs/dayjs.config'
 
 export class EventConsumer {
     private constructor(
@@ -33,7 +33,7 @@ export class EventConsumer {
     }
 
     private async createRecurringEventsForDay(day: string) {
-        const weekDay = dayjs(day).day()
+        const weekDay = dayJsTz(day).day()
         const dayName = EdaysOfWeek[weekDay] as keyof typeof EdaysOfWeek
 
         const eventsToRepeat = await this.eventGateway.findRecurringEventsByDay(dayName)
@@ -76,8 +76,8 @@ export class EventConsumer {
     ): Date | null {
         if (!openParticipantsListDate || !recurringDay) return null
 
-        const openDate = dayjs(openParticipantsListDate)
-        const currentDate = dayjs()
+        const openDate = dayJsTz(openParticipantsListDate)
+        const currentDate = dayJsTz()
 
         const updatedDate = currentDate
             .subtract(daysBeforeOpeningList, 'day')

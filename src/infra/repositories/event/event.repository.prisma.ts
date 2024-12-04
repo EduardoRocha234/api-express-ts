@@ -33,7 +33,9 @@ export class EventRepositoryPrisma implements EventGateway {
             recurringDay,
             maxOfParticipantsWaitingList,
             description,
-            daysBeforeOpeningList
+            daysBeforeOpeningList,
+            latitude,
+            longitude
         } = event
 
         const data = {
@@ -50,7 +52,9 @@ export class EventRepositoryPrisma implements EventGateway {
             recurringDay,
             openParticipantsListDate,
             description,
-            daysBeforeOpeningList
+            daysBeforeOpeningList,
+            latitude,
+            longitude
         }
 
         const eventCreated = await this.prismaClient.event.create({
@@ -73,7 +77,9 @@ export class EventRepositoryPrisma implements EventGateway {
             openParticipantsListDate: eventCreated.openParticipantsListDate,
             description: eventCreated.description,
             daysBeforeOpeningList: eventCreated.daysBeforeOpeningList,
-            participants: []
+            participants: [],
+            latitude: eventCreated.latitude,
+            longitude: eventCreated.longitude
         })
 
         return aEvent
@@ -152,6 +158,8 @@ export class EventRepositoryPrisma implements EventGateway {
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 daysBeforeOpeningList: event.daysBeforeOpeningList,
                 description: event.description,
+                latitude: event.latitude,
+                longitude: event.longitude,
                 participants: event.participants.map((participant) => {
                     return Participant.with({
                         eventId: participant.eventId,
@@ -213,7 +221,9 @@ export class EventRepositoryPrisma implements EventGateway {
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 description: event.description,
                 daysBeforeOpeningList: event.daysBeforeOpeningList,
-                participants: []
+                participants: [],
+                latitude: event.latitude,
+                longitude: event.longitude
             })
 
             return eventWith
@@ -254,6 +264,8 @@ export class EventRepositoryPrisma implements EventGateway {
             openParticipantsListDate: event.openParticipantsListDate,
             description: event.description,
             daysBeforeOpeningList: event.daysBeforeOpeningList,
+            latitude: event.latitude,
+            longitude: event.longitude,
             participants: event.participants.map((participant) => {
                 return Participant.with({
                     eventId: participant.eventId,
@@ -296,7 +308,9 @@ export class EventRepositoryPrisma implements EventGateway {
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 description: event.description,
                 daysBeforeOpeningList: event.daysBeforeOpeningList,
-                participants: []
+                participants: [],
+                latitude: event.latitude,
+                longitude: event.longitude
             })
 
             return eventWith
@@ -340,6 +354,8 @@ export class EventRepositoryPrisma implements EventGateway {
                 maxOfParticipantsWaitingList: event.maxOfParticipantsWaitingList,
                 description: event.description,
                 daysBeforeOpeningList: event.daysBeforeOpeningList,
+                latitude: event.latitude,
+                longitude: event.longitude,
                 participants: event.participants.map((participant) => {
                     return Participant.with({
                         eventId: participant.eventId,
@@ -415,7 +431,9 @@ export class EventRepositoryPrisma implements EventGateway {
             maxOfParticipantsWaitingList: getEvent!.maxOfParticipantsWaitingList,
             description: getEvent!.description,
             daysBeforeOpeningList: getEvent!.daysBeforeOpeningList,
-            participants: getEvent!.participants
+            participants: getEvent!.participants,
+            latitude: getEvent!.latitude,
+            longitude: getEvent!.longitude
         })
 
         return aEvent

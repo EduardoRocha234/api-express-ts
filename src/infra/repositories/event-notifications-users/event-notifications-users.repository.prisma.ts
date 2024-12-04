@@ -66,4 +66,10 @@ export class EventNotificationsUsersRepositoryPrisma implements EventNotificatio
 
         return eventWith
     }
+
+    public async delete(eventId: number, userId: string): Promise<void> {
+        await this.prismaClient.eventNotificationsUser.deleteMany({
+            where: { eventId, userId }
+        })
+    }
 }

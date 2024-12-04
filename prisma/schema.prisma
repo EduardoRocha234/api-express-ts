@@ -55,6 +55,8 @@ model Event {
   recurringDay                    String?
   description                     String?
   daysBeforeOpeningList           Int?
+  latitude                        Int?
+  longitude                       Int?
 
   participants    Participant[]
 

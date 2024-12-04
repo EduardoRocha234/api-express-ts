@@ -14,6 +14,8 @@ import { EventRepositoryPrisma } from '@infra/repositories/event/event.repositor
 import { FindUserByIdUsecase } from '@usecases/user/find-by-id.usecase'
 import { GetUsersWantNotificationsByEventIdAndUserIdUseCase } from '@usecases/eventNotificationsUsers/get-by-event-id-and-user-id.usecase'
 import { GetUsersWantNotificationsByEventIdAndUserIdRoute } from '@infra/api/express/routes/notifications/get-by-event-id-and-user-id.express.route'
+import { DeleteUserEventNotificationUsecase } from '@usecases/eventNotificationsUsers/delete.usecase'
+import { DisableNotificationEventRoute } from '@infra/api/express/routes/notifications/disable-event-notification.express.route'
 
 export default function notificationsProvider(
     prismaClient: PrismaClient,
@@ -24,20 +26,16 @@ export default function notificationsProvider(
 
     // repositories
     const userRepository = UserRepositoryPrisma.create(prismaClient)
-    const saveUserWantsnotificationRepository =
-        EventNotificationsUsersRepositoryPrisma.create(prismaClient)
     const eventRepository = EventRepositoryPrisma.create(prismaClient)
+    const aRepository = EventNotificationsUsersRepositoryPrisma.create(prismaClient)
 
     // usecases
     const savePushTokenUseCase = SaveUserPushTokenUseCase.create(userRepository)
-    const saveUserWantsNotificationUseCase = SaveUserWantsNotificatioUseCase.create(
-        saveUserWantsnotificationRepository
-    )
+    const saveUserWantsNotificationUseCase = SaveUserWantsNotificatioUseCase.create(aRepository)
     const findUserByIdUseCase = FindUserByIdUsecase.create(userRepository)
     const getUsersWantNotificationsByEventIdAndUserIdUseCase =
-        GetUsersWantNotificationsByEventIdAndUserIdUseCase.create(
-            saveUserWantsnotificationRepository
-        )
+        GetUsersWantNotificationsByEventIdAndUserIdUseCase.create(aRepository)
+    const disbleNotificationUseCase = DeleteUserEventNotificationUsecase.create(aRepository)
 
     // rotas
     const savePushTokenRoute = SaveUserPushToken.create(savePushTokenUseCase, [authMiddleware])
@@ -54,13 +52,17 @@ export default function notificationsProvider(
 
     const eventProducer = OpenListEventsNotifyUsersProducer.create(rabbitMQClient)
     const sendNotificationsJob = OpenListEventsNotifyUsersJob.create(eventProducer, eventRepository)
-    console.log('aqui')
+    const disbleNotificationRoutes = DisableNotificationEventRoute.create(
+        disbleNotificationUseCase,
+        [authMiddleware]
+    )
 
     sendNotificationsJob.execute()
 
     return [
         saveUserWantsNotificationRoute,
         savePushTokenRoute,
-        getUsersWantNotificationsByEventIdAndUserIdRoute
+        getUsersWantNotificationsByEventIdAndUserIdRoute,
+        disbleNotificationRoutes
     ]
 }

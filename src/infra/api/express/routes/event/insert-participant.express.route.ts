@@ -72,7 +72,7 @@ export class InsertParticipantInEventRoute implements Route {
                     findEvent.maxParticipants - findEvent.maxOfParticipantsWaitingList
 
                 const status =
-                    numbersOfParticipantsConfirmed < maxNumberOfParticipantsConfirmed
+                    numbersOfParticipantsConfirmed <= maxNumberOfParticipantsConfirmed
                         ? ParticipantStatusEnum.CONFIRMED
                         : ParticipantStatusEnum.WATING_LIST
 

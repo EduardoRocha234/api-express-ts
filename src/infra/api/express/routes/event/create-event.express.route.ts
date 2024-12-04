@@ -32,7 +32,9 @@ export class CreateEventRoute implements Route {
                 openParticipantsListDate,
                 recurringDay,
                 description,
-                daysBeforeOpeningList
+                daysBeforeOpeningList,
+                latitude,
+                longitude
             } = request.body as CreateEventInputDto
 
             if (
@@ -68,7 +70,9 @@ export class CreateEventRoute implements Route {
                     openParticipantsListDate,
                     recurringDay,
                     description,
-                    daysBeforeOpeningList
+                    daysBeforeOpeningList,
+                    latitude,
+                    longitude
                 }
 
                 const output: CreateEventResponseDto = await this.createEventService.execute(input)
@@ -116,7 +120,9 @@ export class CreateEventRoute implements Route {
             openParticipantsListDate: input.openParticipantsListDate,
             adminId: input.adminId,
             description: input.description,
-            daysBeforeOpeningList: input.daysBeforeOpeningList
+            daysBeforeOpeningList: input.daysBeforeOpeningList,
+            latitude: input.latitude,
+            longitude: input.longitude
         }
 
         return response

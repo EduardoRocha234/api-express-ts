@@ -27,6 +27,8 @@ export type EventProps = {
     description: string | null
     daysBeforeOpeningList: number | null
     participants: Participant[]
+    latitude: number | null
+    longitude: number | null
 }
 
 export class Event {
@@ -40,7 +42,7 @@ export class Event {
         sportId: number,
         maxParticipants: number,
         location: string,
-        datetime: Date, 
+        datetime: Date,
         startTime: Date,
         endTime: Date,
         openParticipantsListDate: Date | null,
@@ -49,6 +51,8 @@ export class Event {
         recurringDay: keyof typeof EdaysOfWeek | null,
         description: string | null,
         daysBeforeOpeningList: number | null,
+        latitude: number | null,
+        longitude: number | null,
         participants?: Participant[]
     ): Event {
         return new Event({
@@ -67,7 +71,9 @@ export class Event {
             recurringDay,
             description,
             daysBeforeOpeningList,
-            participants: participants || []
+            participants: participants || [],
+            latitude,
+            longitude
         })
     }
 
@@ -143,5 +149,13 @@ export class Event {
 
     public get daysBeforeOpeningList(): number | null {
         return this.props.daysBeforeOpeningList
+    }
+
+    public get latitude(): number | null {
+        return this.props.latitude
+    }
+
+    public get longitude(): number | null {
+        return this.props.longitude
     }
 }

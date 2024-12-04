@@ -1,7 +1,7 @@
 import type { EventGateway } from '@domain/event/gateway/event.gateway'
 import cron from 'node-cron'
-import dayjs from 'dayjs'
 import type { EventProducer } from '@infra/rabbitmq/producers/event.producer'
+import { dayJsTz } from '@package/dayjs/dayjs.config'
 
 export class CreateEventsCronJob {
     private constructor(
@@ -22,7 +22,7 @@ export class CreateEventsCronJob {
         cron.schedule(
             cronExpression,
             async () => {
-                const today = dayjs().format('YYYY-MM-DD')
+                const today = dayJsTz().format('YYYY-MM-DD')
                 await this.eventProducer.sendMessage(today)
             },
             {

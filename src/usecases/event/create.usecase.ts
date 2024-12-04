@@ -29,7 +29,9 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
         openParticipantsListDate,
         recurringDay,
         description,
-        daysBeforeOpeningList
+        daysBeforeOpeningList,
+        latitude,
+        longitude
     }: CreateEventInputDto): Promise<CreateEventOutputDto> {
         const aEvent = Event.create(
             0,
@@ -45,7 +47,9 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
             adminId,
             recurringDay,
             description,
-            daysBeforeOpeningList
+            daysBeforeOpeningList,
+            latitude,
+            longitude
         )
 
         const eventCreated = await this.eventGateway.save(aEvent)
@@ -70,7 +74,9 @@ export class CreateEventUsecase implements Usecase<CreateEventInputDto, CreateEv
             adminId: e.adminId,
             maxOfParticipantsWaitingList: e.maxOfParticipantsWaitingList,
             daysBeforeOpeningList: e.daysBeforeOpeningList,
-            description: e.description
+            description: e.description,
+            latitude: e.latitude,
+            longitude: e.longitude
         }
 
         return output

@@ -5,6 +5,7 @@ import type { ListEventsOutputDto, ListEventUseCase } from '@usecases/event/list
 import type { EventProps } from '@domain/event/entity/event.entity'
 import type { PaginationOutput } from '@domain/shared/pagination.interface'
 import type { ListEventInput } from '@domain/event/gateway/event.gateway'
+import dayjs from 'dayjs'
 
 export type ListEventResponseDto = {
     events: Omit<EventProps, 'description'>[]
@@ -33,8 +34,8 @@ export class ListEventRoute implements Route {
                     page: Number(page) || 1,
                     pageSize: Number(pageSize) || 10,
                     sportId: sportId ? Number(sportId) : undefined,
-                    initialPeriod: initialPeriod ? new Date(initialPeriod) : undefined,
-                    finalPeriod: finalPeriod ? new Date(finalPeriod) : undefined,
+                    initialPeriod: initialPeriod ? dayjs(initialPeriod).tz().toDate() : undefined,
+                    finalPeriod: finalPeriod ? dayjs(finalPeriod).tz().toDate() : undefined,
                     locale: locale?.toLocaleLowerCase(),
                     name: name?.toLocaleLowerCase()
                 })
@@ -84,6 +85,8 @@ export class ListEventRoute implements Route {
                 adminId: event.adminId,
                 recurringDay: event.recurringDay,
                 daysBeforeOpeningList: event.daysBeforeOpeningList,
+                latitude: event.latitude,
+                longitude: event.longitude,
                 participants: event.participants.map((participant) => ({
                     id: participant.id,
                     userId: participant.userId,

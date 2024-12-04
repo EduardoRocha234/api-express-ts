@@ -11,7 +11,11 @@ export type ListEventByUserParticipantingsOutputDto = {
 }
 
 export class ListUserParticipantsEventsUseCase
-    implements Usecase<ListEventsFindByUserParticipantingInputDto, ListEventByUserParticipantingsOutputDto>
+    implements
+        Usecase<
+            ListEventsFindByUserParticipantingInputDto,
+            ListEventByUserParticipantingsOutputDto
+        >
 {
     private constructor(private readonly eventGateway: EventGateway) {}
 
@@ -47,6 +51,8 @@ export class ListUserParticipantsEventsUseCase
             openParticipantsListDate: event.openParticipantsListDate,
             description: event.description,
             daysBeforeOpeningList: event.daysBeforeOpeningList,
+            latitude: event.latitude,
+            longitude: event.longitude,
             participants: event.participants.map((participant) => ({
                 id: participant.id,
                 userId: participant.userId,

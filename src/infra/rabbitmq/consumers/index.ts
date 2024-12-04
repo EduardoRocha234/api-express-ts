@@ -5,7 +5,7 @@ import { prisma } from '@package/prisma/prisma'
 import { OpenListEventNotifyUserConsumer } from './openListEventNotifyUsers.consumer'
 import { FirebaseAdminService } from '@package/firebase/fire-base-admin'
 import { UserRepositoryPrisma } from '@infra/repositories/user/user.repository.prisma'
-import { EventNotificationsUsersRepositoryPrisma } from '@infra/repositories/eventNotificationsUsers/event-notifications-users.repository.prisma'
+import { EventNotificationsUsersRepositoryPrisma } from '@infra/repositories/event-notifications-users/event-notifications-users.repository.prisma'
 
 async function startConsumers() {
     const rabbitMQClient = RabbitMQClient.create()
